@@ -50,6 +50,8 @@ class _ShareScreenState extends State<ShareScreen> {
   bool _shouldCopyHnLink = true;
   bool _shouldScaleText = true;
 
+  static const double _screenshotPixelRatio = 6;
+
   @override
   Widget build(BuildContext context) {
     final Item item = widget.args.item;
@@ -153,7 +155,7 @@ class _ShareScreenState extends State<ShareScreen> {
                               ),
                               SizedBoxes.pt8,
                               Text(
-                                '''Shared from Hacki, an open-source Hacker News reader.''',
+                                '''Shared from Hacki, an open-source Hacker News client.''',
                                 style: TextStyle(
                                   fontSize: TextDimens.pt12,
                                   color: Theme.of(context)
@@ -250,7 +252,7 @@ class _ShareScreenState extends State<ShareScreen> {
 
   Future<void> _save() async {
     final Uint8List? imageBytes =
-        await _screenshotController.capture(pixelRatio: 3);
+        await _screenshotController.capture(pixelRatio: _screenshotPixelRatio);
     if (imageBytes == null) return;
 
     final bool result = await ImageSaver.saveImage(
@@ -270,20 +272,21 @@ class _ShareScreenState extends State<ShareScreen> {
 
   Future<void> _share() async {
     try {
-      final Uint8List? imageBytes =
-          await _screenshotController.capture(pixelRatio: 3);
+      final Uint8List? imageBytes = await _screenshotController.capture(
+        pixelRatio: _screenshotPixelRatio,
+      );
       if (imageBytes == null) return;
 
       Rect? rect;
       if (mounted) {
         rect = context.rect;
       }
-
+      final int itemId = widget.args.item.id;
       final Directory tempDir = await getTemporaryDirectory();
-      final File file = File('${tempDir.path}/story.png');
+      final File file = File('${tempDir.path}/item_$itemId.png');
       await file.writeAsBytes(imageBytes);
       final Uri itemUrl = Uri.parse(
-        '${Constants.hackerNewsItemLinkPrefix}${widget.args.item.id}',
+        '${Constants.hackerNewsItemLinkPrefix}$itemId',
       );
 
       final ShareParams shareParams = ShareParams(
