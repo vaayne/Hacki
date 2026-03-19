@@ -71,6 +71,9 @@ class CommentTile extends StatelessWidget {
       )..init(),
       child: BlocBuilder3<CollapseCubit, CollapseState, PreferenceCubit,
           PreferenceState, BlocklistCubit, BlocklistState>(
+        key: index == null
+            ? null
+            : context.read<CommentsCubit>().globalKeys[comment.id],
         builder: (
           BuildContext context,
           CollapseState state,
@@ -296,6 +299,8 @@ class CommentTile extends StatelessWidget {
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
                                 horizontal: Dimens.pt12,
+                              ).copyWith(
+                                bottom: Dimens.pt6,
                               ),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -308,11 +313,20 @@ class CommentTile extends StatelessWidget {
                                               comment: comment,
                                             );
                                       },
-                                      child: Text(
-                                        '''Load ${comment.kids.length} ${comment.kids.length > 1 ? 'replies' : 'reply'}''',
-                                        style: const TextStyle(
-                                          fontSize: TextDimens.pt12,
-                                        ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          const Icon(
+                                            Icons.keyboard_arrow_down_rounded,
+                                            size: Dimens.pt28,
+                                          ),
+                                          Text(
+                                            '''${comment.kids.length} ${comment.kids.length > 1 ? 'replies' : 'reply'}''',
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ),
@@ -493,8 +507,12 @@ class CommentTile extends StatelessWidget {
 
   void _collapse(BuildContext context) {
     final PreferenceCubit preferenceCubit = context.read<PreferenceCubit>();
-    final CollapseCubit collapseCubit = context.read<CollapseCubit>()
-      ..collapse(onStateChanged: HapticFeedbackUtil.selection);
+    final CollapseCubit collapseCubit = context.read<CollapseCubit>();
+    if (collapseCubit.state.collapsed) {
+      collapseCubit.uncollapse(onStateChanged: HapticFeedbackUtil.selection);
+    } else {
+      collapseCubit.collapse(onStateChanged: HapticFeedbackUtil.selection);
+    }
     if (collapseCubit.state.collapsed &&
         preferenceCubit.state.isAutoScrollEnabled) {
       final CommentsCubit commentsCubit = context.read<CommentsCubit>();
