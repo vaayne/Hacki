@@ -115,7 +115,8 @@ class _InThreadSearchViewState extends State<_InThreadSearchView> {
         buildWhen: (CommentsState previous, CommentsState current) =>
             previous.matchedComments != current.matchedComments ||
             previous.inThreadSearchAuthor != current.inThreadSearchAuthor ||
-            previous.inThreadSearchStatus != current.inThreadSearchStatus,
+            previous.inThreadSearchStatus != current.inThreadSearchStatus ||
+            previous.isNewInSearchSelected != current.isNewInSearchSelected,
         builder: (BuildContext context, CommentsState state) {
           final AuthState authState = context.read<AuthBloc>().state;
           return Scaffold(
@@ -146,6 +147,7 @@ class _InThreadSearchViewState extends State<_InThreadSearchView> {
                           () => widget.commentsCubit.search(
                             text,
                             author: state.inThreadSearchAuthor,
+                            isNewSelected: state.isNewInSearchSelected,
                           ),
                         ),
                       ),
@@ -178,10 +180,12 @@ class _InThreadSearchViewState extends State<_InThreadSearchView> {
                           widget.commentsCubit.search(
                             state.inThreadSearchQuery,
                             author: state.item.by,
+                            isNewSelected: state.isNewInSearchSelected,
                           );
                         } else {
                           widget.commentsCubit.search(
                             state.inThreadSearchQuery,
+                            isNewSelected: state.isNewInSearchSelected,
                           );
                         }
                       },
@@ -199,10 +203,36 @@ class _InThreadSearchViewState extends State<_InThreadSearchView> {
                             widget.commentsCubit.search(
                               state.inThreadSearchQuery,
                               author: authState.username,
+                              isNewSelected: state.isNewInSearchSelected,
                             );
                           } else {
                             widget.commentsCubit.search(
                               state.inThreadSearchQuery,
+                              isNewSelected: state.isNewInSearchSelected,
+                            );
+                          }
+                        },
+                      ),
+                    ],
+                    if (widget.commentsCubit.hasNewComment) ...<Widget>[
+                      const SizedBox(
+                        width: Dimens.pt12,
+                      ),
+                      CustomChip(
+                        selected: state.isNewInSearchSelected,
+                        label: 'new',
+                        onSelected: (bool value) {
+                          if (value) {
+                            widget.commentsCubit.search(
+                              state.inThreadSearchQuery,
+                              author: state.inThreadSearchAuthor,
+                              isNewSelected: value,
+                            );
+                          } else {
+                            widget.commentsCubit.search(
+                              state.inThreadSearchQuery,
+                              author: state.inThreadSearchAuthor,
+                              isNewSelected: value,
                             );
                           }
                         },
@@ -221,6 +251,7 @@ class _InThreadSearchViewState extends State<_InThreadSearchView> {
                           widget.commentsCubit.search(
                             '',
                             author: state.inThreadSearchAuthor,
+                            isNewSelected: state.isNewInSearchSelected,
                           );
                         }
                         focusNode.requestFocus();
