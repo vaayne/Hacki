@@ -5,7 +5,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:hacki/config/custom_router.dart';
-import 'package:hacki/models/displayable.dart';
 import 'package:hacki/models/models.dart';
 import 'package:hacki/styles/palette.dart';
 import 'package:responsive_builder/responsive_builder.dart';
@@ -71,13 +70,15 @@ abstract final class Preference<T> extends Equatable with SettingsDisplayable {
       const MarkReadStoriesModePreference(),
 
       /// Divider.
-      const AutoScrollModePreference(),
       const ManualPaginationPreference(),
       const NotificationModePreference(),
+      const SwipeGesturePreference(),
+      const DividerPlaceholder(label: 'Thread'),
+      const PersistCollapseStateAcrossSessions(),
+      const PreserveCollapseStateAfterScreenExit(),
       const ReaderModePreference(),
       const SkipButtonsPreference(),
       const SplitViewPreference(),
-      const SwipeGesturePreference(),
       const CollapseModePreference(),
       const CustomTabPreference(),
       const DividerPlaceholder(label: 'Look And Feel'),
@@ -108,6 +109,9 @@ final class DividerPlaceholder extends Preference<void> {
 
   @override
   String get title => throw UnimplementedError();
+
+  @override
+  List<Object?> get props => <Object?>[label];
 }
 
 abstract final class BooleanPreference extends Preference<bool> {
@@ -317,28 +321,6 @@ final class CollapseModePreference extends BooleanPreference {
   @override
   String get subtitle =>
       '''if disabled, tap on the top of comment tile to collapse.''';
-}
-
-final class AutoScrollModePreference extends BooleanPreference {
-  const AutoScrollModePreference({bool? val})
-      : super(val: val ?? _autoScrollModeDefaultValue);
-
-  static const bool _autoScrollModeDefaultValue = true;
-
-  @override
-  AutoScrollModePreference copyWith({required bool? val}) {
-    return AutoScrollModePreference(val: val);
-  }
-
-  @override
-  String get key => 'autoScrollMode';
-
-  @override
-  String get title => 'Auto-scroll on Collapsing';
-
-  @override
-  String get subtitle =>
-      '''automatically scroll to next comment when you collapse a comment.''';
 }
 
 final class IndexedStoryTilePreference extends BooleanPreference {
@@ -561,7 +543,7 @@ final class ReaderModePreference extends BooleanPreference {
   const ReaderModePreference({bool? val})
       : super(val: val ?? _readerModeDefaultValue);
 
-  static const bool _readerModeDefaultValue = true;
+  static const bool _readerModeDefaultValue = false;
 
   @override
   ReaderModePreference copyWith({required bool? val}) {
@@ -646,6 +628,57 @@ final class ManualPaginationPreference extends BooleanPreference {
 
   @override
   String get subtitle => '''so you can get stuff done.''';
+}
+
+/// Option to keep collapse state in local persistence.
+final class PersistCollapseStateAcrossSessions extends BooleanPreference {
+  const PersistCollapseStateAcrossSessions({bool? val})
+      : super(val: val ?? _defaultValue);
+
+  static const bool _defaultValue = true;
+
+  @override
+  PersistCollapseStateAcrossSessions copyWith({required bool? val}) {
+    return PersistCollapseStateAcrossSessions(val: val);
+  }
+
+  @override
+  Set<Preference<dynamic>> get dependencies => <Preference<dynamic>>{
+        const PreserveCollapseStateAfterScreenExit(val: true),
+      };
+
+  @override
+  String get key => 'persistCollapseStateAcrossSessions';
+
+  @override
+  String get title => 'Persist Collapse State';
+
+  @override
+  String get subtitle =>
+      '''persist collapse state of comments upon leaving the app.''';
+}
+
+/// Option to keep collapse state in memory.
+final class PreserveCollapseStateAfterScreenExit extends BooleanPreference {
+  const PreserveCollapseStateAfterScreenExit({bool? val})
+      : super(val: val ?? _defaultValue);
+
+  static const bool _defaultValue = true;
+
+  @override
+  PreserveCollapseStateAfterScreenExit copyWith({required bool? val}) {
+    return PreserveCollapseStateAfterScreenExit(val: val);
+  }
+
+  @override
+  String get key => 'preserveCollapseStateAfterScreenExit';
+
+  @override
+  String get title => 'Preserve Collapse State';
+
+  @override
+  String get subtitle =>
+      '''preserve collapse state of comments upon leaving a thread.''';
 }
 
 /// Whether or not to use Custom Tabs for launching URLs.

@@ -312,6 +312,8 @@ class _SettingsState extends State<Settings> with ItemActionMixin, Loggable {
                     else if (preference is PreviewImageAlignmentPreference)
                       FadeIn(
                         child: ListTile(
+                          enabled: preference.dependencies
+                              .satisfy(preferenceState.preferences),
                           title: Text(preference.title),
                           trailing: SegmentedButton<bool>(
                             showSelectedIcon: false,
@@ -330,17 +332,21 @@ class _SettingsState extends State<Settings> with ItemActionMixin, Loggable {
                                 preference as BooleanPreference,
                               ),
                             },
-                            onSelectionChanged: (Set<bool> val) {
-                              HapticFeedbackUtil.light();
-                              context
-                                  .read<PreferenceCubit>()
-                                  .update(preference.copyWith(val: val.single));
-                            },
+                            onSelectionChanged: preference.dependencies
+                                    .satisfy(preferenceState.preferences)
+                                ? (Set<bool> val) {
+                                    HapticFeedbackUtil.light();
+                                    context.read<PreferenceCubit>().update(
+                                          preference.copyWith(val: val.single),
+                                        );
+                                  }
+                                : null,
                           ),
                         ),
                       )
                     else
                       SwitchListTile(
+                        key: ValueKey<String>(preference.key),
                         title: Text(preference.title),
                         subtitle: preference.subtitle.isNotEmpty
                             ? Text(preference.subtitle)
@@ -348,20 +354,24 @@ class _SettingsState extends State<Settings> with ItemActionMixin, Loggable {
                         value: preferenceState.isOn(
                           preference as BooleanPreference,
                         ),
-                        onChanged: (bool val) {
-                          HapticFeedbackUtil.light();
+                        onChanged: preference.dependencies
+                                .satisfy(preferenceState.preferences)
+                            ? (bool val) {
+                                HapticFeedbackUtil.light();
 
-                          context
-                              .read<PreferenceCubit>()
-                              .update(preference.copyWith(val: val));
+                                context
+                                    .read<PreferenceCubit>()
+                                    .update(preference.copyWith(val: val));
 
-                          if (preference is MarkReadStoriesModePreference &&
-                              val == false) {
-                            context
-                                .read<StoriesBloc>()
-                                .add(ClearAllReadStories());
-                          }
-                        },
+                                if (preference
+                                        is MarkReadStoriesModePreference &&
+                                    val == false) {
+                                  context
+                                      .read<StoriesBloc>()
+                                      .add(ClearAllReadStories());
+                                }
+                              }
+                            : null,
                         activeThumbColor: Theme.of(context).colorScheme.primary,
                       ),
                     if (preference
@@ -699,27 +709,18 @@ class _SettingsState extends State<Settings> with ItemActionMixin, Loggable {
             TextButton(
               onPressed: () {
                 context.pop();
-                locator
-                    .get<SembastRepository>()
-                    .deleteAllCachedItems()
-                    .whenComplete(
-                      locator.get<OfflineRepository>().deleteAll,
-                    )
-                    .whenComplete(
-                      locator.get<PreferenceRepository>().clearAllReadStories,
-                    )
-                    .whenComplete(
-                      DefaultCacheManager().emptyCache,
-                    )
-                    .whenComplete(
-                      locator.get<SembastRepository>().deleteCachedComments,
-                    )
-                    .whenComplete(
-                      locator.get<SembastRepository>().deleteCachedMetadata,
-                    )
-                    .whenComplete(() {
-                  showSnackBar(content: 'Cache cleared!');
-                });
+                locator.get<OfflineRepository>().deleteAll();
+                locator.get<PreferenceRepository>().clearAllReadStories();
+                DefaultCacheManager().emptyCache();
+                locator.get<SembastRepository>()
+                  ..deleteAllCachedItems()
+                  ..deleteCachedComments()
+                  ..deleteCachedMetadata()
+                  ..deleteCachedMetadata();
+                locator.get<CollapseStateCacheRepository>().clear();
+
+                HapticFeedbackUtil.success();
+                showSnackBar(content: 'Cache cleared!');
               },
               child: const Text(
                 'Yes',

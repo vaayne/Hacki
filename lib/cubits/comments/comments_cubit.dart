@@ -28,6 +28,9 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 part 'comments_state.dart';
 
+final Map<int, Map<int, Comment>> _itemIdToPreviousStates =
+    <int, Map<int, Comment>>{};
+
 class CommentsCubit extends Cubit<CommentsState> with Loggable {
   CommentsCubit({
     required FilterCubit filterCubit,
@@ -41,6 +44,7 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
     SembastRepository? sembastRepository,
     HackerNewsRepository? hackerNewsRepository,
     HackerNewsWebRepository? hackerNewsWebRepository,
+    CollapseStateCacheRepository? collapseStateCacheRepository,
   })  : _filterCubit = filterCubit,
         _preferenceCubit = preferenceCubit,
         _commentCache = commentCache ?? locator.get<CommentCache>(),
@@ -52,6 +56,8 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
             hackerNewsRepository ?? locator.get<HackerNewsRepository>(),
         _hackerNewsWebRepository =
             hackerNewsWebRepository ?? locator.get<HackerNewsWebRepository>(),
+        _collapseStateCacheRepository = collapseStateCacheRepository ??
+            locator.get<CollapseStateCacheRepository>(),
         super(
           CommentsState.init(
             isOfflineReading: isOfflineReading,
@@ -73,6 +79,7 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
   final SembastRepository _sembastRepository;
   final HackerNewsRepository _hackerNewsRepository;
   final HackerNewsWebRepository _hackerNewsWebRepository;
+  final CollapseStateCacheRepository _collapseStateCacheRepository;
 
   final ItemScrollController itemScrollController = ItemScrollController();
   final ItemPositionsListener itemPositionsListener =
@@ -129,6 +136,21 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
     }
   }
 
+  Future<void> _initializeCollapseStateCache() async {
+    if (_preferenceCubit.state.shouldPersistCollapseStateAcrossSessions &&
+        _itemIdToPreviousStates.isEmpty) {
+      _itemIdToPreviousStates.addAll(
+        _collapseStateCacheRepository.cachedItemIdToPreviousStates,
+      );
+    }
+
+    if (_preferenceCubit.state.shouldPreserveCollapseStateAfterScreenExit) {
+      _previousCommentStates = _itemIdToPreviousStates[state.item.id];
+    } else {
+      _itemIdToPreviousStates.clear();
+    }
+  }
+
   Future<void> init({
     bool shouldOnlyShowTargetComment = false,
     bool shouldUseCommentCacheInMemory = false,
@@ -136,6 +158,15 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
     AppExceptionHandler? onError,
     bool isFetchingFromWebAllowed = true,
   }) async {
+    await _initializeCollapseStateCache();
+
+    final Item item = state.item;
+
+    if (_preferenceCubit.state.shouldPreserveCollapseStateAfterScreenExit &&
+        item is Story) {
+      _previousCommentStates = _itemIdToPreviousStates[item.id];
+    }
+
     if (shouldOnlyShowTargetComment && (targetAncestors?.isNotEmpty ?? false)) {
       emit(
         state.copyWith(
@@ -168,7 +199,6 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
       ),
     );
 
-    final Item item = state.item;
     final Item updatedItem = state.isOfflineReading
         ? item
         : await _hackerNewsRepository
@@ -932,8 +962,24 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
 
   void _preserveCollapseState() {
     _previousCommentStates = <int, Comment>{};
+
     for (final Comment e in state.comments) {
-      _previousCommentStates?[e.id] = e;
+      _previousCommentStates?[e.id] = e.copyWithOnlyCollapseState();
+    }
+
+    if (_previousCommentStates != null && state.item is Story) {
+      _itemIdToPreviousStates[state.item.id] = _previousCommentStates!;
+
+      if (_preferenceCubit.state.shouldPersistCollapseStateAcrossSessions) {
+        _collapseStateCacheRepository.saveStoryStates(
+          state.item.id,
+          _previousCommentStates!,
+        );
+      }
+
+      if (!_preferenceCubit.state.shouldPreserveCollapseStateAfterScreenExit) {
+        _itemIdToPreviousStates.clear();
+      }
     }
   }
 
@@ -962,8 +1008,8 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
           state.comments.where((Comment c) => c.isNew).length;
       if (newCommentsCount > 0) {
         navigatorKey.currentContext?.showSnackBar(
-          content: '''
-          $newCommentsCount new comment${newCommentsCount > 1 ? 's' : ''} fetched.''',
+          content:
+              '''$newCommentsCount new comment${newCommentsCount > 1 ? 's' : ''} fetched.''',
         );
       } else {
         navigatorKey.currentContext?.showSnackBar(
@@ -1098,6 +1144,7 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
       await s.cancel();
     }
     await _searchStreamSubscription?.cancel();
+    _preserveCollapseState();
     await super.close();
   }
 
