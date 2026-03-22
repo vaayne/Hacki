@@ -20,6 +20,7 @@ import 'package:hacki/screens/item/widgets/in_thread_search_icon_button.dart'
     show InThreadSearchIconButton;
 import 'package:hacki/screens/screens.dart' show ItemScreen, ItemScreenArgs;
 import 'package:hacki/screens/widgets/custom_linkify/custom_linkify.dart';
+import 'package:hacki/screens/widgets/shine_overlay.dart';
 import 'package:hacki/services/services.dart';
 import 'package:hacki/utils/utils.dart';
 import 'package:rxdart/rxdart.dart';
@@ -90,6 +91,11 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
   static const int _webFetchingCmtCountLowerLimit = 5;
   static DateTime? _hackerNewsWebRetryAfterDateTime;
 
+  /// The id of the comment of which the text selection menu is active.
+  static int _lockedCommentId = 0;
+  final Map<int, Comment> _previousCommentStates = <int, Comment>{};
+  double inThreadSearchOffset = 0;
+
   Future<bool> get _shouldFetchFromWeb async {
     final bool isOnWifi = await _isOnWifi;
     final bool isPastRetryAfterDateTime =
@@ -125,7 +131,7 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
 
   Future<void> init({
     bool shouldOnlyShowTargetComment = false,
-    bool shouldUseCommentCache = false,
+    bool shouldUseCommentCacheInMemory = false,
     List<Comment>? targetAncestors,
     AppExceptionHandler? onError,
     bool isFetchingFromWebAllowed = true,
@@ -177,14 +183,16 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
     late final Stream<Comment> commentStream;
 
     if (state.isOfflineReading) {
-      commentStream = _offlineRepository.getCachedCommentsStream(ids: kids);
+      commentStream = _offlineRepository.getCachedCommentsStream(
+        ids: kids,
+      );
     } else {
       switch (state.fetchMode) {
         case FetchMode.lazy:
           commentStream = _hackerNewsRepository.fetchCommentsStream(
             ids: kids,
             getFromCache:
-                shouldUseCommentCache ? _commentCache.getComment : null,
+                shouldUseCommentCacheInMemory ? _commentCache.getComment : null,
           );
         case FetchMode.eager:
           switch (state.order) {
@@ -193,7 +201,9 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
               if (isFetchingFromWebAllowed && shouldFetchFromWeb) {
                 logInfo('fetching comments of ${item.id} from web.');
                 commentStream = _hackerNewsWebRepository
-                    .fetchCommentsStream(state.item)
+                    .fetchCommentsStream(
+                  state.item,
+                )
                     .handleError((dynamic e) {
                   _streamSubscription?.cancel();
 
@@ -224,8 +234,9 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
                 commentStream =
                     _hackerNewsRepository.fetchAllCommentsRecursivelyStream(
                   ids: kids,
-                  getFromCache:
-                      shouldUseCommentCache ? _commentCache.getComment : null,
+                  getFromCache: shouldUseCommentCacheInMemory
+                      ? _commentCache.getComment
+                      : null,
                 );
               }
             case CommentsOrder.oldestFirst:
@@ -233,8 +244,9 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
               commentStream =
                   _hackerNewsRepository.fetchAllCommentsRecursivelyStream(
                 ids: kids,
-                getFromCache:
-                    shouldUseCommentCache ? _commentCache.getComment : null,
+                getFromCache: shouldUseCommentCacheInMemory
+                    ? _commentCache.getComment
+                    : null,
               );
           }
       }
@@ -266,8 +278,10 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
       return;
     }
 
-    // TODO(me): an option to keep the collapse state after refresh.
-    // _collapseCache.resetCollapsedComments();
+    /// Preserve collapse state.
+    for (final Comment e in state.comments) {
+      _previousCommentStates[e.id] = e;
+    }
 
     await _streamSubscription?.cancel();
     for (final int id in _streamSubscriptions.keys) {
@@ -343,7 +357,7 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
         .asyncMap(_toBuildableComment)
         .whereNotNull()
         .listen(_onCommentFetched)
-      ..onDone(_onDone);
+      ..onDone(() => _onDone(isRefresh: true));
 
     emit(
       state.copyWith(
@@ -427,8 +441,6 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
     }
   }
 
-  static int _lockedCommentId = 0;
-
   void lock(Comment comment) {
     _lockedCommentId = comment.id;
   }
@@ -436,6 +448,8 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
   bool isCommentLocked(Comment comment) => _lockedCommentId == comment.id;
 
   void collapse(Comment comment) {
+    /// When text selection context menu is being displayed,
+    /// ignore the collapse request.
     if (isCommentLocked(comment)) {
       _lockedCommentId = 0;
       return;
@@ -460,7 +474,6 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
       if (cmt.level > commentLevel) {
         cmt = cmt.copyWith(isHiddenByUser: true);
         updatedComments.add(cmt);
-
         if (i == comments.length - 1) {
           endIndex = comments.length;
         }
@@ -494,7 +507,6 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
       if (cmt.level > commentLevel) {
         cmt = cmt.copyWith(isHiddenByUser: false);
         updatedComments.add(cmt);
-
         if (i == comments.length - 1) {
           endIndex = comments.length;
         }
@@ -578,11 +590,36 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
       s.cancel();
     }
     _streamSubscriptions.clear();
-    emit(state.copyWith(order: order));
-    init(shouldUseCommentCache: true);
+
+    /// Preserve collapse state.
+    for (final Comment e in state.comments) {
+      _previousCommentStates[e.id] = e;
+    }
+
+    emit(
+      state.copyWith(
+        order: order,
+        comments: <Comment>[],
+      ),
+    );
+
+    final Item item = state.item;
+    final List<int> kids = _sortKids(item.kids);
+    final Stream<Comment> commentStream =
+        _commentCache.getCommentsStream(ids: kids);
+    _streamSubscription = commentStream
+        .asyncMap(_toBuildableComment)
+        .whereNotNull()
+        .listen(_onCommentFetched)
+      ..onDone(_onDone);
   }
 
   void updateFetchMode(FetchMode? fetchMode) {
+    /// Preserve collapse state.
+    for (final Comment e in state.comments) {
+      _previousCommentStates[e.id] = e;
+    }
+
     if (fetchMode == null) return;
     if (state.fetchMode == fetchMode) return;
     HapticFeedbackUtil.selection();
@@ -592,7 +629,80 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
     }
     _streamSubscriptions.clear();
     emit(state.copyWith(fetchMode: fetchMode));
-    init(shouldUseCommentCache: true);
+    init();
+  }
+
+  Future<void> scrollToComment(Comment comment) async {
+    /// Find out the index of the comment in the thread.
+    final Comment? matchedComment = state.comments.singleWhereOrNull(
+      (Comment c) => c.id == comment.id,
+    );
+    if (matchedComment == null) return;
+    final int index = state.comments.indexOf(matchedComment);
+
+    /// If index if found, scroll to the comment.
+    if (index != -1) {
+      await scrollTo(
+        index: index + 1,
+        alignment: 0.2,
+      );
+    }
+
+    /// Then find out the context of the target comment and
+    /// also all of its ancestors, uncollapse them if they
+    /// are collapsed.
+    final GlobalKey<State<StatefulWidget>>? targetCommentGlobalKey =
+        globalKeys[matchedComment.id];
+    Comment? curComment = matchedComment;
+    while (curComment != null) {
+      if (curComment.isCollapsedByUser) {
+        uncollapse(curComment);
+      }
+      curComment = state.comments.singleWhereOrNull(
+        (Comment c) => c.id == curComment?.parent,
+      );
+
+      if (curComment == null) break;
+    }
+
+    final BuildContext? targetCommentContext =
+        targetCommentGlobalKey?.currentContext;
+
+    /// After uncollapsing all the ancestors,
+    /// once again, ensure the target comment is visible.
+    /// Then create a shine effect on the widget to
+    /// briefly highlight the target comment tile.
+    if (targetCommentContext != null) {
+      /// If there is a comment context, then use the
+      /// `ensureVisible` to bring it into view.
+      if (targetCommentContext.mounted) {
+        await Scrollable.ensureVisible(
+          targetCommentContext,
+          alignment: 0.3,
+          duration: AppDurations.ms300,
+        );
+
+        if (index != -1) {
+          await scrollTo(
+            index: index,
+            alignment: 0.2,
+          );
+        }
+
+        Future<void>.delayed(AppDurations.ms500, () {
+          final BuildContext? newTargetCommentContext =
+              targetCommentGlobalKey?.currentContext;
+          if (targetCommentGlobalKey != null &&
+              newTargetCommentContext != null &&
+              newTargetCommentContext.mounted) {
+            _startShine(
+              newTargetCommentContext,
+              targetCommentGlobalKey,
+            );
+          }
+        });
+      }
+    }
   }
 
   Future<void> scrollTo({
@@ -778,7 +888,7 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
     }
   }
 
-  void _onDone() {
+  void _onDone({bool isRefresh = false}) {
     _streamSubscription?.cancel();
     _streamSubscription = null;
     emit(
@@ -786,10 +896,54 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
         status: CommentsStatus.allLoaded,
       ),
     );
+
+    if (isRefresh) {
+      final int newCommentsCount =
+          state.comments.where((Comment c) => c.isNew).length;
+      if (newCommentsCount > 0) {
+        navigatorKey.currentContext?.showSnackBar(
+          content:
+              '''$newCommentsCount new comment${newCommentsCount > 1 ? 's' : ''} fetched.''',
+        );
+      } else {
+        navigatorKey.currentContext?.showSnackBar(
+          content: 'No new comments.',
+        );
+      }
+    }
   }
 
   void _onCommentFetched(BuildableComment? comment) {
     if (comment != null) {
+      final Comment? prevState = _previousCommentStates[comment.id];
+      final int parentIndex =
+          state.comments.indexWhere((Comment c) => c.id == comment?.parent);
+      if (parentIndex > -1) {
+        final Comment parent = state.comments.elementAt(parentIndex);
+        comment = comment.copyWith(
+          isHiddenByUser: parent.isHiddenByUser || parent.isCollapsedByUser,
+        );
+      } else if (_previousCommentStates.isNotEmpty && prevState == null) {
+        final Comment? parent = _previousCommentStates[comment.parent];
+        if (parent == null) {
+          comment = comment.copyWith(
+            isNew: true,
+          );
+        } else {
+          comment = comment.copyWith(
+            isHiddenByUser: parent.isCollapsedByUser || parent.isHiddenByUser,
+            isNew: true,
+          );
+        }
+        _previousCommentStates[comment.id] = comment;
+      } else {
+        comment = comment.copyWith(
+          isCollapsedByUser: prevState?.isCollapsedByUser,
+          isHiddenByUser: prevState?.isHiddenByUser,
+          isNew: false,
+        );
+      }
+
       globalKeys[comment.id] = GlobalKey(
         debugLabel: 'comment_tile_key_${comment.id}_under_${state.item.id}',
       );
@@ -801,7 +955,7 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
 
       // Hide comment that matches any of the filter keywords.
       final bool hidden = _filterCubit.state.keywords.any(
-        (String keyword) => comment.text.toLowerCase().contains(keyword),
+        (String keyword) => comment!.text.toLowerCase().contains(keyword),
       );
       final List<Comment> updatedComments = <Comment>[
         ...state.comments,
@@ -883,6 +1037,34 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
     }
     await _searchStreamSubscription?.cancel();
     await super.close();
+  }
+
+  static Rect? _getWidgetRect(GlobalKey targetGlobalKey) {
+    final RenderBox? renderBox =
+        targetGlobalKey.currentContext?.findRenderObject() as RenderBox?;
+    if (renderBox == null) return null;
+
+    final Offset offset = renderBox.localToGlobal(Offset.zero);
+    final Size size = renderBox.size;
+    return offset & size;
+  }
+
+  static void _startShine(
+    BuildContext targetContext,
+    GlobalKey targetGlobalKey,
+  ) {
+    final Rect? rect = _getWidgetRect(targetGlobalKey);
+    if (rect == null) return;
+
+    late OverlayEntry entry;
+    entry = OverlayEntry(
+      builder: (_) => ShineOverlay(
+        rect: rect,
+        onDone: () => entry.remove(),
+      ),
+    );
+
+    Overlay.of(targetContext).insert(entry);
   }
 
   @override

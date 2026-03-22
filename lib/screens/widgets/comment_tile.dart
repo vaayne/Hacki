@@ -205,23 +205,25 @@ class CommentTile extends StatelessWidget {
                               ),
                             if (isResponse)
                               const Padding(
-                                padding: EdgeInsets.only(left: 4),
+                                padding: EdgeInsets.only(left: Dimens.pt4),
                                 child: Icon(
                                   Icons.reply,
-                                  size: 16,
+                                  size: Dimens.pt16,
                                   color: Palette.grey,
                                 ),
                               ),
-                            // Commented out for now, maybe review later.
-                            // if (!comment.dead && isNew)
-                            //   const Padding(
-                            //     padding: EdgeInsets.only(left: 4),
-                            //     child: Icon(
-                            //       Icons.sunny_snowing,
-                            //       size: 16,
-                            //       color: Palette.grey,
-                            //     ),
-                            //   ),
+                            if (comment.isNew)
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: Dimens.pt4),
+                                child: Icon(
+                                  Icons.fiber_new,
+                                  size: Dimens.pt16,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .primaryContainer,
+                                ),
+                              ),
                             const Spacer(),
                             Text(
                               prefState.displayDateFormat
@@ -353,13 +355,19 @@ class CommentTile extends StatelessWidget {
 
         Widget wrapper = child;
 
-        if (isMyComment && level == 0) {
+        if ((isMyComment || comment.isNew) && level == 0) {
           return Container(
             clipBehavior: Clip.hardEdge,
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary.withValues(
-                    alpha: 0.2,
-                  ),
+              color: () {
+                if (isMyComment) {
+                  return primaryColor.withValues(alpha: 0.2);
+                } else if (comment.isNew) {
+                  return Theme.of(context).highlightColor;
+                }
+
+                return commentColor;
+              }(),
             ),
             child: wrapper,
           );
@@ -376,7 +384,6 @@ class CommentTile extends StatelessWidget {
                   primaryColor: primaryColor,
                   brightness: brightness,
                 );
-          final bool shouldHighlight = isMyComment && i == level;
           wrapper = Container(
             clipBehavior: Clip.hardEdge,
             margin: const EdgeInsets.only(
@@ -390,14 +397,24 @@ class CommentTile extends StatelessWidget {
                       ),
                     )
                   : null,
-              color: shouldHighlight
-                  ? primaryColor.withValues(alpha: 0.2)
-                  : commentColor,
+              color: () {
+                if (i == level) {
+                  if (isMyComment) {
+                    return primaryColor.withValues(alpha: 0.2);
+                  } else if (comment.isNew) {
+                    return Theme.of(context).highlightColor;
+                  }
+                }
+
+                return commentColor;
+              }(),
             ),
             child: wrapper,
           );
         }
 
+        /// This makes the left part of the thread that doesn't contain
+        /// any text able to recognize for back gesture.
         if (<int>[0, 1, 2, 3].contains(level)) {
           wrapper = Stack(
             children: <Widget>[
