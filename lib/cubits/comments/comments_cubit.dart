@@ -803,18 +803,20 @@ comments length is ${state.comments.length}
           }
         }
 
-        await Future<void>.delayed(AppDurations.ms400, () {
-          final BuildContext? newTargetCommentContext =
-              targetCommentGlobalKey?.currentContext;
-          if (targetCommentGlobalKey != null &&
-              newTargetCommentContext != null &&
-              newTargetCommentContext.mounted) {
-            _startShine(
-              newTargetCommentContext,
-              targetCommentGlobalKey,
-            );
-          }
-        });
+        if (!isRetrying) {
+          await Future<void>.delayed(AppDurations.ms400, () {
+            final BuildContext? newTargetCommentContext =
+                targetCommentGlobalKey?.currentContext;
+            if (targetCommentGlobalKey != null &&
+                newTargetCommentContext != null &&
+                newTargetCommentContext.mounted) {
+              _startShine(
+                newTargetCommentContext,
+                targetCommentGlobalKey,
+              );
+            }
+          });
+        }
       });
     }
   }
