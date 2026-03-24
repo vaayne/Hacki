@@ -69,11 +69,8 @@ class OfflineBanner extends StatelessWidget {
                       }
                     });
                   },
-                  child: Text(
+                  child: const Text(
                     'Exit',
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.primaryContainer,
-                    ),
                   ),
                 )
               else
