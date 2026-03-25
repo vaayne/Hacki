@@ -89,6 +89,7 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
   final CollapseStateCacheRepository _collapseStateCacheRepository;
   final AppLifecycleService _appLifecycleService;
   late final StreamSubscription<AppLifecycleState> _appStateSubscription;
+  void Function()? openInThreadSearch;
 
   final ItemScrollController itemScrollController = ItemScrollController();
   final ItemPositionsListener itemPositionsListener =
@@ -336,16 +337,33 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
     }
     _streamSubscriptions.clear();
 
-    emit(
-      state.copyWith(
-        comments: <Comment>[],
-        currentPage: 0,
-      ),
-    );
-
     final Item item = state.item;
     final Item updatedItem =
         await _hackerNewsRepository.fetchItem(id: item.id) ?? item;
+
+    /// Compare the kids to decide if we should fetch from remote source.
+    if (item.kids.length == updatedItem.kids.length &&
+        item.kids.toSet() == updatedItem.kids.toSet()) {
+      emit(
+        state.copyWith(
+          status: CommentsStatus.allLoaded,
+        ),
+      );
+
+      navigatorKey.currentContext?.showSnackBar(
+        content: 'No new comments.',
+      );
+
+      return;
+    } else {
+      emit(
+        state.copyWith(
+          comments: <Comment>[],
+          currentPage: 0,
+        ),
+      );
+    }
+
     final List<int> kids = _sortKids(updatedItem.kids);
 
     late final Stream<Comment> commentStream;
@@ -642,9 +660,6 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
       s.cancel();
     }
     _streamSubscriptions.clear();
-
-    /// Preserve collapse state.
-    _preserveCollapseState();
 
     emit(
       state.copyWith(
@@ -1064,14 +1079,25 @@ comments length is ${state.comments.length}
       ),
     );
 
-    if (isCompletionSnackBarEnabled) {
-      HapticFeedbackUtil.success();
+    final bool isFirstTimeReading =
+        !_itemIdToPreviousStates.containsKey(state.item.id);
+    if (isCompletionSnackBarEnabled && !isFirstTimeReading) {
       final int newCommentsCount =
           state.comments.where((Comment c) => c.isNew).length;
       if (newCommentsCount > 0) {
+        HapticFeedbackUtil.success();
         navigatorKey.currentContext?.showSnackBar(
+          persist: false,
           content:
               '''$newCommentsCount new comment${newCommentsCount > 1 ? 's' : ''} fetched.''',
+          label: openInThreadSearch == null ? null : 'Search',
+          action: openInThreadSearch == null
+              ? null
+              : () {
+                  resetSearch();
+                  search('', isNewSelected: true);
+                  openInThreadSearch?.call();
+                },
         );
       } else {
         navigatorKey.currentContext?.showSnackBar(
