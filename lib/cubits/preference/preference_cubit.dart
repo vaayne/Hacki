@@ -73,24 +73,32 @@ class PreferenceCubit extends Cubit<PreferenceState> with Loggable {
 
     emit(state.copyWithPreference(preference));
 
-    switch (T) {
-      case int:
+    switch (preference.val) {
+      case int():
         _preferenceRepository.setInt(
           preference.key,
           preference.val as int,
         );
-      case double:
+      case double():
         _preferenceRepository.setDouble(
           preference.key,
           preference.val as double,
         );
-      case bool:
+      case bool():
         _preferenceRepository.setBool(
           preference.key,
           preference.val as bool,
         );
       default:
         throw UnimplementedError();
+    }
+  }
+
+  void restoreDefaultSettings() {
+    for (final Preference<dynamic> p in Preference.allPreferences) {
+      if (p is DividerPlaceholder) continue;
+      update(p);
+      emit(state.copyWithPreference(p));
     }
   }
 

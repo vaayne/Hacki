@@ -313,12 +313,6 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
     required AppExceptionHandler? onError,
     bool fetchFromWeb = true,
   }) async {
-    emit(
-      state.copyWith(
-        status: CommentsStatus.inProgress,
-      ),
-    );
-
     if (state.isOfflineReading) {
       emit(
         state.copyWith(
@@ -326,16 +320,18 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
         ),
       );
       return;
+    } else if (state.status == CommentsStatus.inProgress) {
+      return;
     }
+
+    emit(
+      state.copyWith(
+        status: CommentsStatus.inProgress,
+      ),
+    );
 
     /// Preserve collapse state.
     _preserveCollapseState();
-
-    await _streamSubscription?.cancel();
-    for (final int id in _streamSubscriptions.keys) {
-      await _streamSubscriptions[id]?.cancel();
-    }
-    _streamSubscriptions.clear();
 
     final Item item = state.item;
     final Item updatedItem =
@@ -349,9 +345,14 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
           status: CommentsStatus.allLoaded,
         ),
       );
-
       return;
     } else {
+      await _streamSubscription?.cancel();
+      for (final int id in _streamSubscriptions.keys) {
+        await _streamSubscriptions[id]?.cancel();
+      }
+      _streamSubscriptions.clear();
+
       emit(
         state.copyWith(
           comments: <Comment>[],
@@ -445,7 +446,6 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
   /// [comment] is only used for lazy fetching.
   void loadMore({
     Comment? comment,
-    void Function(Comment)? onCommentFetched,
     VoidCallback? onDone,
   }) {
     if (comment == null && state.status == CommentsStatus.inProgress) return;
@@ -496,12 +496,7 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
 
         _streamSubscriptions[comment.id] = streamSubscription;
       case FetchMode.eager:
-        if (_streamSubscription != null) {
-          emit(state.copyWith(status: CommentsStatus.inProgress));
-          _streamSubscription
-            ?..resume()
-            ..onData(onCommentFetched);
-        }
+        return;
     }
   }
 
@@ -582,7 +577,10 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
   }
 
   /// Hidden and new comments count.
-  (int, int) collapsedCount(Comment comment) {
+  (int, int) collapsedCount(
+    Comment comment, {
+    bool countNewComments = false,
+  }) {
     final List<Comment> comments = state.comments;
     final int commentIndex =
         state.comments.indexWhere((Comment c) => c.id == comment.id);
@@ -592,7 +590,7 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
     for (int i = commentIndex + 1; i < comments.length; i++) {
       final Comment cmt = comments.elementAt(i);
       if (cmt.level > commentLevel) {
-        if (cmt.isNew) newCommentsCount++;
+        if (countNewComments && cmt.isNew) newCommentsCount++;
         count++;
       } else {
         break;
@@ -1033,14 +1031,14 @@ comments length is ${state.comments.length}
       );
 
   void _preserveCollapseState() {
-    _previousCommentStates = <int, Comment>{};
+    _previousCommentStates ??= <int, Comment>{};
 
     for (final Comment e in state.comments) {
       _previousCommentStates?[e.id] = e.copyWithOnlyCollapseState();
     }
 
     if (_previousCommentStates != null && state.item is Story) {
-      _itemIdToPreviousStates[state.item.id] = _previousCommentStates!;
+      _itemIdToPreviousStates[state.item.id]?.addAll(_previousCommentStates!);
 
       if (_preferenceCubit.state.shouldPersistCollapseStateAcrossSessions) {
         _collapseStateCacheRepository.saveStoryStates(
@@ -1069,6 +1067,8 @@ comments length is ${state.comments.length}
   void _onDone({bool isCompletionSnackBarEnabled = false}) {
     _streamSubscription?.cancel();
     _streamSubscription = null;
+
+    logInfo('loading of ${state.item.id} is complete.');
     emit(
       state.copyWith(
         status: CommentsStatus.allLoaded,
