@@ -40,25 +40,25 @@ class MorePopupMenu extends StatelessWidget {
         },
         listener: (BuildContext context, VoteState voteState) {
           if (voteState.status == VoteStatus.submitted) {
-            context.showSnackBar(content: 'Vote submitted.');
+            context.showSnackBar(content: SnackBarMessages.voteSubmitted);
           } else if (voteState.status == VoteStatus.canceled) {
-            context.showSnackBar(content: 'Vote canceled.');
+            context.showSnackBar(content: SnackBarMessages.voteCanceled);
           } else if (voteState.status == VoteStatus.failure) {
             context.showErrorSnackBar();
           } else if (voteState.status ==
               VoteStatus.failureKarmaBelowThreshold) {
             context.showSnackBar(
-              content: "You can't downvote because you are karmaly broke.",
+              content: SnackBarMessages.karmalyBroke,
             );
           } else if (voteState.status == VoteStatus.failureNotLoggedIn) {
             context.showSnackBar(
-              content: 'Not logged in, no voting! (;｀O´)o',
+              content: SnackBarMessages.notLoggedInNoVoting,
               action: onLoginTapped,
               label: 'Log in',
             );
           } else if (voteState.status == VoteStatus.failureBeHumble) {
             context.showSnackBar(
-              content: 'No voting on your own post! (;｀O´)o',
+              content: SnackBarMessages.noVotingOnYourOwnComment,
             );
           }
 
@@ -183,7 +183,9 @@ class MorePopupMenu extends StatelessWidget {
               ),
               ListTile(
                 leading: Icon(
-                  FeatherIcons.chevronUp,
+                  upvoted
+                      ? Icons.thumb_up_rounded
+                      : Icons.thumb_up_off_alt_outlined,
                   color: upvoted ? Theme.of(context).colorScheme.primary : null,
                 ),
                 title: Text(
@@ -197,7 +199,9 @@ class MorePopupMenu extends StatelessWidget {
               ),
               ListTile(
                 leading: Icon(
-                  FeatherIcons.chevronDown,
+                  downvoted
+                      ? Icons.thumb_down_rounded
+                      : Icons.thumb_down_off_alt_outlined,
                   color:
                       downvoted ? Theme.of(context).colorScheme.primary : null,
                 ),

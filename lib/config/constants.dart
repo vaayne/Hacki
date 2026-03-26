@@ -27,6 +27,7 @@ abstract class Constants {
   static const String supportEmail = 'georgefung98@gmail.com';
 
   static const String _imagePath = 'assets/images';
+  static const String _videoPath = 'assets/videos';
   static const String hackerNewsLogoPath = '$_imagePath/hacker_news_logo.png';
   static const String hackiIconPath = '$_imagePath/hacki_icon.png';
   static const String commentTileLeftSlidePath =
@@ -35,10 +36,12 @@ abstract class Constants {
       '$_imagePath/comment_tile_right_slide.png';
   static const String commentTileTopTapPath =
       '$_imagePath/comment_tile_top_tap.png';
-  static const String shareImageHintsFirst =
+  static const String shareImageHintsFirstPath =
       '$_imagePath/share_image_hint_1.png';
-  static const String shareImageHintsSecond =
+  static const String shareImageHintsSecondPath =
       '$_imagePath/share_image_hint_2.png';
+  static const String itemScreenTimeMachineTipsPath =
+      '$_videoPath/item_screen_time_machine.mp4';
 
   static const String logFilename = 'hacki_log.txt';
   static const String previousLogFileName = 'old_hacki_log.txt';
@@ -122,4 +125,15 @@ abstract class HeroTags {
       'mobile_download_progress_reminder';
   static const String progressReminderTextHeroTag =
       'mobile_download_progress_reminder_text';
+}
+
+abstract class SnackBarMessages {
+  static const String notLoggedInNoVoting =
+      '''Not logged in, no voting! (;｀O´)o''';
+  static const String noVotingOnYourOwnComment =
+      '''No voting on your own post! (;｀O´)o''';
+  static const String karmalyBroke =
+      '''You can't downvote because you are karmaly broke.''';
+  static const String voteSubmitted = 'Vote submitted.';
+  static const String voteCanceled = 'Vote canceled.';
 }

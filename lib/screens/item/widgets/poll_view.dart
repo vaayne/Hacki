@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_fadein/flutter_fadein.dart';
 import 'package:hacki/blocs/auth/auth_bloc.dart';
+import 'package:hacki/config/constants.dart';
 import 'package:hacki/cubits/cubits.dart';
 import 'package:hacki/extensions/extensions.dart';
 import 'package:hacki/models/models.dart';
@@ -63,29 +64,28 @@ class _PollViewState extends State<PollView> with ItemActionMixin {
                       ScaffoldMessenger.of(context).clearSnackBars();
                       if (voteState.status == VoteStatus.submitted) {
                         showSnackBar(
-                          content: 'Vote submitted.',
+                          content: SnackBarMessages.voteSubmitted,
                         );
                       } else if (voteState.status == VoteStatus.canceled) {
-                        showSnackBar(content: 'Vote canceled.');
+                        showSnackBar(content: SnackBarMessages.voteCanceled);
                       } else if (voteState.status == VoteStatus.failure) {
                         showErrorSnackBar();
                       } else if (voteState.status ==
                           VoteStatus.failureKarmaBelowThreshold) {
                         showSnackBar(
-                          content: "You can't downvote because"
-                              ' you are karmaly broke.',
+                          content: SnackBarMessages.karmalyBroke,
                         );
                       } else if (voteState.status ==
                           VoteStatus.failureNotLoggedIn) {
                         showSnackBar(
-                          content: 'Not logged in, no voting! (;｀O´)o',
+                          content: SnackBarMessages.notLoggedInNoVoting,
                           action: onLoginTapped,
                           label: 'Log in',
                         );
                       } else if (voteState.status ==
                           VoteStatus.failureBeHumble) {
                         showSnackBar(
-                          content: 'No voting on your own post! (;｀O´)o',
+                          content: SnackBarMessages.noVotingOnYourOwnComment,
                         );
                       }
                     },
