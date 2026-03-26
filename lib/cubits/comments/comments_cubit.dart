@@ -28,7 +28,7 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 part 'comments_state.dart';
 
-final Map<int, Map<int, Comment>> _itemIdToPreviousStates =
+final Map<int, Map<int, Comment>> _globalStoryIdToPreviousCollapseStates =
     <int, Map<int, Comment>>{};
 
 class CommentsCubit extends Cubit<CommentsState> with Loggable {
@@ -153,17 +153,20 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
       return;
     }
 
+    /// Make sure the global cache is initialized.
     if (_preferenceCubit.state.shouldPersistCollapseStateAcrossSessions &&
-        _itemIdToPreviousStates.isEmpty) {
-      _itemIdToPreviousStates.addAll(
+        _globalStoryIdToPreviousCollapseStates.isEmpty) {
+      _globalStoryIdToPreviousCollapseStates.addAll(
         _collapseStateCacheRepository.cachedItemIdToPreviousStates,
       );
     }
 
+    /// Make sure the local cache is initialized.
     if (_preferenceCubit.state.shouldPreserveCollapseStateAfterScreenExit) {
-      _previousCommentStates = _itemIdToPreviousStates[state.item.id];
+      _previousCommentStates =
+          _globalStoryIdToPreviousCollapseStates[state.item.id];
     } else {
-      _itemIdToPreviousStates.clear();
+      _globalStoryIdToPreviousCollapseStates.clear();
     }
   }
 
@@ -180,7 +183,7 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
 
     if (_preferenceCubit.state.shouldPreserveCollapseStateAfterScreenExit &&
         item is Story) {
-      _previousCommentStates = _itemIdToPreviousStates[item.id];
+      _previousCommentStates = _globalStoryIdToPreviousCollapseStates[item.id];
     }
 
     if (shouldOnlyShowTargetComment && (targetAncestors?.isNotEmpty ?? false)) {
@@ -341,29 +344,19 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
     final Item updatedItem =
         await _hackerNewsRepository.fetchItem(id: item.id) ?? item;
 
-    /// Compare the kids to decide if we should fetch from remote source.
-    if (item.kids.length == updatedItem.kids.length &&
-        item.kids.toSet() == updatedItem.kids.toSet()) {
-      emit(
-        state.copyWith(
-          status: CommentsStatus.allLoaded,
-        ),
-      );
-      return;
-    } else {
-      await _streamSubscription?.cancel();
-      for (final int id in _streamSubscriptions.keys) {
-        await _streamSubscriptions[id]?.cancel();
-      }
-      _streamSubscriptions.clear();
-
-      emit(
-        state.copyWith(
-          comments: <Comment>[],
-          currentPage: 0,
-        ),
-      );
+    await _streamSubscription?.cancel();
+    for (final int id in _streamSubscriptions.keys) {
+      await _streamSubscriptions[id]?.cancel();
     }
+    _streamSubscriptions.clear();
+
+    emit(
+      state.copyWith(
+        item: updatedItem,
+        comments: <Comment>[],
+        currentPage: 0,
+      ),
+    );
 
     final List<int> kids = _sortKids(updatedItem.kids);
 
@@ -567,12 +560,13 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
       Comment curCmt = comments.elementAt(i);
       endIndex = i;
       if (curCmt.level > commentLevel) {
-        final bool isParentCollapsed =
+        final bool isParentCollapsedOrHidden =
             localCollapseState[curCmt.parent] ?? false;
         final bool shouldBeHidden =
-            curCmt.parent == comment.id || isParentCollapsed;
+            curCmt.parent != comment.id && isParentCollapsedOrHidden;
         curCmt = curCmt.copyWith(isHiddenByUser: shouldBeHidden);
-        localCollapseState[curCmt.id] = curCmt.isCollapsedByUser;
+        localCollapseState[curCmt.id] =
+            curCmt.isCollapsedByUser || curCmt.isHiddenByUser;
         updatedComments.add(curCmt);
         if (i == comments.length - 1) {
           endIndex = comments.length;
@@ -1050,7 +1044,7 @@ comments length is ${state.comments.length}
     }
 
     if (_previousCommentStates != null && state.item is Story) {
-      _itemIdToPreviousStates
+      _globalStoryIdToPreviousCollapseStates
           .putIfAbsent(state.item.id, () => <int, Comment>{})
           .addAll(_previousCommentStates ?? <int, Comment>{});
 
@@ -1062,7 +1056,7 @@ comments length is ${state.comments.length}
       }
 
       if (!_preferenceCubit.state.shouldPreserveCollapseStateAfterScreenExit) {
-        _itemIdToPreviousStates.clear();
+        _globalStoryIdToPreviousCollapseStates.clear();
       }
     }
   }
@@ -1090,7 +1084,7 @@ comments length is ${state.comments.length}
     );
 
     final bool isFirstTimeReading =
-        !_itemIdToPreviousStates.containsKey(state.item.id);
+        !_globalStoryIdToPreviousCollapseStates.containsKey(state.item.id);
     if (isCompletionSnackBarEnabled && !isFirstTimeReading) {
       final int newCommentsCount =
           state.comments.where((Comment c) => c.isNew).length;
@@ -1119,9 +1113,12 @@ comments length is ${state.comments.length}
       final Comment? prevState = _previousCommentStates?[comment.id];
       final int parentIndex =
           state.comments.indexWhere((Comment c) => c.id == comment?.parent);
+
       if (parentIndex > -1) {
         final Comment parent = state.comments.elementAt(parentIndex);
+
         comment = comment.copyWith(
+          isCollapsedByUser: prevState?.isCollapsedByUser,
           isHiddenByUser: parent.isHiddenByUser || parent.isCollapsedByUser,
           isNew: _previousCommentStates != null && prevState == null,
         );
