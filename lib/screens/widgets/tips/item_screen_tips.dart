@@ -21,14 +21,18 @@ class _ItemScreenTipsState extends State<ItemScreenTips> {
   @override
   void initState() {
     super.initState();
-    _controller =
-        VideoPlayerController.asset(Constants.itemScreenTimeMachineTipsPath)
-          ..setLooping(true)
-          ..initialize().then((_) {
-            /// Ensure the first frame is shown after the video is initialized.
-            setState(() {});
-          })
-          ..play();
+    _controller = VideoPlayerController.asset(
+      Constants.itemScreenTimeMachineTipsPath,
+      videoPlayerOptions: VideoPlayerOptions(
+        mixWithOthers: true,
+      ),
+    )
+      ..setVolume(0)
+      ..setLooping(true)
+      ..initialize().then((_) {
+        /// Ensure the first frame is shown after the video is initialized.
+        setState(() {});
+      });
   }
 
   @override
@@ -46,6 +50,7 @@ class _ItemScreenTipsState extends State<ItemScreenTips> {
         );
       },
       openBuilder: (BuildContext context, void Function() action) {
+        _controller.play();
         context.read<TipsCubit>().completeTips(Tips.itemScreen);
         return Scaffold(
           appBar: AppBar(
@@ -58,9 +63,7 @@ class _ItemScreenTipsState extends State<ItemScreenTips> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                SizedBox(
-                  height: MediaQuery.of(context).padding.top,
-                ),
+                SizedBoxes.pt12,
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
@@ -91,7 +94,7 @@ class _ItemScreenTipsState extends State<ItemScreenTips> {
                     horizontal: Dimens.pt12,
                   ),
                   child: Text(
-                    '''When you find yourself too deep in the thread, you can swipe right on comment to see its ancestor including the root story (or comment).''',
+                    '''When you find yourself too deep in a thread, you can swipe right on a comment to see its ancestors including the root story (or comment).''',
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.onSecondaryContainer,
                       fontSize: TextDimens.pt16,

@@ -244,6 +244,31 @@ class _SearchScreenState extends State<SearchScreen> with ItemActionMixin {
                                                 state.dateFilter?.startTime,
                                             endDate: state.dateFilter?.endTime,
                                           ),
+                                          const SizedBox(
+                                            width: Dimens.pt8,
+                                          ),
+                                          DateTimeShortcutChip.yearBefore(
+                                            onDateTimeRangeUpdated: context
+                                                .read<SearchCubit>()
+                                                .onDateTimeRangeUpdated,
+                                            startDate:
+                                                state.dateFilter?.startTime,
+                                            endDate: state.dateFilter?.endTime,
+                                          ),
+                                          const SizedBox(
+                                            width: Dimens.pt8,
+                                          ),
+                                          DateTimeShortcutChip.yearAfter(
+                                            onDateTimeRangeUpdated: context
+                                                .read<SearchCubit>()
+                                                .onDateTimeRangeUpdated,
+                                            startDate:
+                                                state.dateFilter?.startTime,
+                                            endDate: state.dateFilter?.endTime,
+                                          ),
+                                          const SizedBox(
+                                            width: Dimens.pt8,
+                                          ),
                                         ],
                                       ),
                                     ),
@@ -266,8 +291,8 @@ class _SearchScreenState extends State<SearchScreen> with ItemActionMixin {
                                                 .read<SearchCubit>()
                                                 .removeFilter<
                                                     DateTimeRangeFilter>(),
-                                            selected: state.params.exactMatch,
-                                            label: '''remove date range''',
+                                            selected: false,
+                                            label: '''reset''',
                                           ),
                                           const SizedBox(
                                             width: Dimens.pt8,

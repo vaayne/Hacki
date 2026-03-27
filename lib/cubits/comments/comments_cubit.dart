@@ -31,6 +31,8 @@ part 'comments_state.dart';
 final Map<int, Map<int, Comment>> _globalStoryIdToPreviousCollapseStates =
     <int, Map<int, Comment>>{};
 
+final Map<int, Story> _globalIdToStoryCache = <int, Story>{};
+
 class CommentsCubit extends Cubit<CommentsState> with Loggable {
   CommentsCubit({
     required FilterCubit filterCubit,
@@ -225,6 +227,7 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
                 .then(_toBuildable)
                 .onError((_, __) => item) ??
             item;
+
     final List<int> kids = _sortKids(updatedItem.kids);
 
     emit(state.copyWith(item: updatedItem));
@@ -237,18 +240,39 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
         ids: kids,
       );
     } else {
+      /// Check if we should keep using the comment cache in memory.
+      final Story? cachedStory =
+          item is Story ? _globalIdToStoryCache[item.id] : null;
+      bool shouldPrioritizeCache = false;
+
+      /// If there is a cached story and the descendants is same as that of
+      /// the updated item, fetch from cache instead.
+      if (cachedStory != null &&
+          cachedStory.descendants == updatedItem.descendants) {
+        logInfo('no updates in story, prioritizing cache fetching.');
+        shouldPrioritizeCache = true;
+      } else if (updatedItem is Story) {
+        logInfo(
+          '''first time visiting or updates in story, fetching from remote source.''',
+        );
+        _globalIdToStoryCache[item.id] = updatedItem;
+      }
+
       switch (state.fetchMode) {
         case FetchMode.lazy:
           commentStream = _hackerNewsRepository.fetchCommentsStream(
             ids: kids,
-            getFromCache:
-                shouldUseCommentCacheInMemory ? _commentCache.getComment : null,
+            getFromCache: shouldUseCommentCacheInMemory || shouldPrioritizeCache
+                ? _commentCache.getComment
+                : null,
           );
         case FetchMode.eager:
           switch (state.order) {
             case CommentsOrder.natural:
               final bool shouldFetchFromWeb = await _shouldFetchFromWeb;
-              if (isFetchingFromWebAllowed && shouldFetchFromWeb) {
+              if (isFetchingFromWebAllowed &&
+                  shouldFetchFromWeb &&
+                  !shouldPrioritizeCache) {
                 logInfo('fetching comments of ${item.id} from web.');
                 commentStream = _hackerNewsWebRepository
                     .fetchCommentsStream(
@@ -280,15 +304,17 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
 
                   /// If fetching from web failed, fetch using API instead.
                   init(onError: onError, isFetchingFromWebAllowed: false);
+                  return;
                 });
               } else {
                 logInfo('fetching comments of ${item.id} from API.');
                 commentStream =
                     _hackerNewsRepository.fetchAllCommentsRecursivelyStream(
                   ids: kids,
-                  getFromCache: shouldUseCommentCacheInMemory
-                      ? _commentCache.getComment
-                      : null,
+                  getFromCache:
+                      shouldUseCommentCacheInMemory || shouldPrioritizeCache
+                          ? _commentCache.getComment
+                          : null,
                 );
               }
             case CommentsOrder.oldestFirst:
@@ -297,9 +323,10 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
               commentStream =
                   _hackerNewsRepository.fetchAllCommentsRecursivelyStream(
                 ids: kids,
-                getFromCache: shouldUseCommentCacheInMemory
-                    ? _commentCache.getComment
-                    : null,
+                getFromCache:
+                    shouldUseCommentCacheInMemory || shouldPrioritizeCache
+                        ? _commentCache.getComment
+                        : null,
               );
           }
       }
@@ -343,6 +370,16 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
     final Item item = state.item;
     final Item updatedItem =
         await _hackerNewsRepository.fetchItem(id: item.id) ?? item;
+
+    /// If descendants has not changed, abort fetching.
+    if (item is Story && item.descendants == updatedItem.descendants) {
+      emit(
+        state.copyWith(
+          status: CommentsStatus.allLoaded,
+        ),
+      );
+      return;
+    }
 
     await _streamSubscription?.cancel();
     for (final int id in _streamSubscriptions.keys) {
@@ -398,7 +435,9 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
                 }
 
                 /// If fetching from web failed, fetch using API instead.
+                emit(state.copyWith(status: CommentsStatus.allLoaded));
                 refresh(onError: onError, fetchFromWeb: false);
+                return;
               });
             } else {
               logInfo('fetching comments of ${item.id} from API.');
@@ -671,11 +710,11 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
     final List<int> kids = _sortKids(item.kids);
     final Stream<Comment> commentStream =
         _commentCache.getCommentsStream(ids: kids);
-    _streamSubscription = commentStream
-        .asyncMap(_toBuildableComment)
-        .whereNotNull()
-        .listen(_onCommentFetched)
-      ..onDone(_onDone);
+    _streamSubscription =
+        commentStream.asyncMap(_toBuildableComment).whereNotNull().listen(
+              (BuildableComment cmt) =>
+                  _onCommentFetched(cmt, persistNewState: true),
+            )..onDone(_onDone);
   }
 
   void updateFetchMode(FetchMode? fetchMode) {
@@ -1108,31 +1147,36 @@ comments length is ${state.comments.length}
     }
   }
 
-  void _onCommentFetched(BuildableComment? comment) {
+  void _onCommentFetched(
+    BuildableComment? comment, {
+    bool persistNewState = false,
+  }) {
     if (comment != null) {
       final Comment? prevState = _previousCommentStates?[comment.id];
       final int parentIndex =
           state.comments.indexWhere((Comment c) => c.id == comment?.parent);
-
+      final bool isCommentValid = !(comment.dead || comment.deleted);
       if (parentIndex > -1) {
         final Comment parent = state.comments.elementAt(parentIndex);
 
         comment = comment.copyWith(
           isCollapsedByUser: prevState?.isCollapsedByUser,
           isHiddenByUser: parent.isHiddenByUser || parent.isCollapsedByUser,
-          isNew: _previousCommentStates != null && prevState == null,
+          isNew: isCommentValid &&
+              _previousCommentStates != null &&
+              prevState == null,
         );
       } else if ((_previousCommentStates?.isNotEmpty ?? false) &&
           prevState == null) {
         final Comment? parent = _previousCommentStates?[comment.parent];
         if (parent == null) {
           comment = comment.copyWith(
-            isNew: !(comment.dead || comment.deleted),
+            isNew: isCommentValid,
           );
         } else {
           comment = comment.copyWith(
             isHiddenByUser: parent.isCollapsedByUser || parent.isHiddenByUser,
-            isNew: !(comment.dead || comment.deleted),
+            isNew: isCommentValid,
           );
         }
         _previousCommentStates?[comment.id] = comment;
@@ -1140,7 +1184,7 @@ comments length is ${state.comments.length}
         comment = comment.copyWith(
           isCollapsedByUser: prevState?.isCollapsedByUser,
           isHiddenByUser: prevState?.isHiddenByUser,
-          isNew: false,
+          isNew: persistNewState ? prevState?.isNew : false,
         );
       }
 

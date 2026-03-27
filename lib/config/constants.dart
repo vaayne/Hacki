@@ -83,6 +83,7 @@ abstract class Constants {
     '''就算一刻洩氣別要捨棄 人若沒有夢這生似死''',
     'Enjoy it while it lasts',
     'There is no fear in love',
+    'Life is too short, carpe diem',
   ].randomlyPicked!;
 
   static final String errorMessage = 'Something went wrong...$sadFace';
@@ -118,6 +119,8 @@ abstract class AppDurations {
   static const Duration sec30 = Duration(seconds: 30);
   static const Duration oneMinute = Duration(minutes: 1);
   static const Duration twoMinutes = Duration(minutes: 2);
+  static const Duration threeMinutes = Duration(minutes: 3);
+  static const Duration fiveMinutes = Duration(minutes: 5);
 }
 
 abstract class HeroTags {

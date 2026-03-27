@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:collection/collection.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 import 'package:dio_smart_retry/dio_smart_retry.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hacki/config/constants.dart';
@@ -23,46 +24,72 @@ class HackerNewsWebRepository with Loggable {
   HackerNewsWebRepository({
     RemoteConfigCubit? remoteConfigCubit,
     HackerNewsRepository? hackerNewsRepository,
+    HttpClient? httpClient,
     Dio? dioWithCache,
     Dio? dio,
-  })  : _dio = dio ?? Dio()
+  })  : _httpClient = httpClient ?? HttpClient()
+          ..idleTimeout = AppDurations.sec30
+          ..maxConnectionsPerHost = 2,
+        _dio = dio ?? Dio()
           ..interceptors.addAll(
             <Interceptor>[
-              if (kDebugMode) LoggerInterceptor(),
+              ..._interceptors,
+              StoryCacheInterceptor(),
             ],
           )
           ..options.headers[HttpHeaders.userAgentHeader] =
               Constants.iphoneUserAgent,
-        _dioWithCache = dioWithCache ?? Dio()
-          ..interceptors.addAll(
-            <Interceptor>[
-              if (kDebugMode) LoggerInterceptor(),
-              CacheInterceptor(),
-            ],
-          )
+        _dioForComments = dioWithCache ?? Dio()
+          ..interceptors.addAll(<Interceptor>[
+            ..._interceptors,
+            CacheInterceptor(),
+          ])
           ..options.headers[HttpHeaders.userAgentHeader] =
               Constants.iphoneUserAgent,
         _remoteConfigCubit =
             remoteConfigCubit ?? locator.get<RemoteConfigCubit>(),
         _hackerNewsRepository =
             hackerNewsRepository ?? locator.get<HackerNewsRepository>() {
-    _dio.interceptors.add(RetryInterceptor(dio: _dio));
+    _dio
+      ..interceptors.add(RetryInterceptor(dio: _dio))
+      ..httpClientAdapter = IOHttpClientAdapter(
+        createHttpClient: () => _httpClient,
+      );
+    _dioForComments.httpClientAdapter = IOHttpClientAdapter(
+      createHttpClient: () => _httpClient,
+    );
   }
+
+  static final List<Interceptor> _interceptors = <Interceptor>[
+    if (kDebugMode) LoggerInterceptor(),
+    UARotationInterceptor(),
+    RefererInterceptor(),
+  ];
 
   /// The client for fetching comments. We should be careful
   /// while fetching comments because it will easily trigger
   /// 503 from the server.
-  final Dio _dioWithCache;
+  final Dio _dioForComments;
 
   /// The client for fetching stories.
   final Dio _dio;
+
+  final HttpClient _httpClient;
 
   final RemoteConfigCubit _remoteConfigCubit;
   final HackerNewsRepository _hackerNewsRepository;
 
   static const Map<String, String> _headers = <String, String>{
-    HttpHeaders.acceptHeader: '*/*',
     HttpHeaders.userAgentHeader: Constants.iphoneUserAgent,
+    HttpHeaders.acceptHeader:
+        'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+    HttpHeaders.acceptLanguageHeader: 'en-US,en;q=0.9',
+    HttpHeaders.acceptEncodingHeader: 'gzip, deflate, br',
+    HttpHeaders.connectionHeader: 'keep-alive',
+    'Sec-Fetch-Dest': 'document',
+    'Sec-Fetch-Mode': 'navigate',
+    'Sec-Fetch-Site': 'same-origin',
+    'Sec-Fetch-User': '?1',
   };
 
   static const String _storiesBaseUrl = 'https://news.ycombinator.com';
@@ -275,7 +302,7 @@ class HackerNewsWebRepository with Loggable {
           '''$_favoritesBaseUrl$username${isComment ? '&comments=t' : ''}&p=$page''',
         );
         final Response<String> response =
-            await (isOnWifi ? _dioWithCache : _dio).getUri<String>(url);
+            await (isOnWifi ? _dioForComments : _dio).getUri<String>(url);
 
         /// Due to rate limiting, we have a short break here.
         await Future<void>.delayed(AppDurations.twoSeconds);
@@ -350,7 +377,7 @@ class HackerNewsWebRepository with Loggable {
 
         /// Be more conservative while user is on wifi.
         final Response<String> response =
-            await (isOnWifi ? _dioWithCache : _dio).getUri<String>(
+            await (isOnWifi ? _dioForComments : _dio).getUri<String>(
           url,
           options: option,
         );
