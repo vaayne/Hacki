@@ -22,11 +22,12 @@ class MainView extends StatelessWidget {
     required this.commentEditingController,
     required this.authState,
     required this.preferenceState,
-    required this.topPadding,
     required this.splitViewEnabled,
     required this.onMoreTapped,
     required this.onRightMoreTapped,
     required this.shouldMarkNewComment,
+    required this.indentPadding,
+    required this.indentLineWidth,
     super.key,
   });
 
@@ -34,11 +35,12 @@ class MainView extends StatelessWidget {
   final TextEditingController commentEditingController;
   final AuthState authState;
   final PreferenceState preferenceState;
-  final double topPadding;
   final bool splitViewEnabled;
   final bool shouldMarkNewComment;
   final void Function(Item item, Rect? rect) onMoreTapped;
   final ValueChanged<Comment> onRightMoreTapped;
+  final double indentPadding;
+  final double indentLineWidth;
 
   static const int _loadingIndicatorOpacityAnimationDuration = 300;
   static const double _trailingBoxHeight = 240;
@@ -84,28 +86,35 @@ class MainView extends StatelessWidget {
                   itemPositionsListener:
                       context.read<CommentsCubit>().itemPositionsListener,
                   itemCount: state.comments.length + 2,
-                  padding: EdgeInsets.only(top: topPadding),
                   scrollOffsetListener: scrollOffsetListener,
                   itemBuilder: (BuildContext context, int index) {
                     if (index == 0) {
-                      return _ParentItemSection(
-                        commentEditingController: commentEditingController,
-                        state: state,
-                        authState: authState,
-                        preferenceState: preferenceState,
-                        topPadding: topPadding,
-                        splitViewEnabled: splitViewEnabled,
-                        onMoreTapped: onMoreTapped,
-                        onUpvoteTapped: (Item item) => onUpvoteTapped(
-                          context,
-                          item,
+                      return ColoredBox(
+                        color: Theme.of(context).canvasColor,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            top: MediaQuery.of(context).padding.top,
+                          ),
+                          child: _ParentItemSection(
+                            commentEditingController: commentEditingController,
+                            state: state,
+                            authState: authState,
+                            preferenceState: preferenceState,
+                            splitViewEnabled: splitViewEnabled,
+                            onMoreTapped: onMoreTapped,
+                            onUpvoteTapped: (Item item) => onUpvoteTapped(
+                              context,
+                              item,
+                            ),
+                          ),
                         ),
                       );
                     } else if (index == state.comments.length + 1) {
                       if ((state.status == CommentsStatus.allLoaded &&
                               state.comments.isNotEmpty) ||
                           state.onlyShowTargetComment) {
-                        return SizedBox(
+                        return Container(
+                          color: Palette.transparent,
                           height: _trailingBoxHeight,
                           child: Center(
                             child: Text(Constants.happyFace),
@@ -123,30 +132,37 @@ class MainView extends StatelessWidget {
                       key: context.read<CommentsCubit>().globalKeys[comment.id],
                       child: comment.isHiddenByUser
                           ? const SizedBox.shrink()
-                          : CommentTile(
-                              comment: comment,
-                              index: index,
-                              level: comment.level,
-                              opUsername: state.item.by,
-                              fetchMode: state.fetchMode,
-                              isResponse: state.isResponse(comment),
-                              isCompactCollapsedTileEnabled:
-                                  preferenceState.isCompactCollapsedTileEnabled,
-                              shouldHighlightNewComments:
-                                  preferenceState.shouldHighlightNewComments,
-                              isDev: preferenceState.isDevModeEnabled,
-                              isNew:
-                                  shouldMarkNewComment && !comment.isFromCache,
-                              isEyeCandyEnabled:
-                                  preferenceState.isEyeCandyEnabled,
-                              onUpvoteTapped: (Comment cmt) =>
-                                  onUpvoteTapped(context, cmt),
-                              onReplyTapped: (Comment cmt) =>
-                                  onReplyTapped(context, cmt),
-                              onEditTapped: (Comment cmt) =>
-                                  onEditTapped(context, cmt),
-                              onMoreTapped: onMoreTapped,
-                              onRightMoreTapped: onRightMoreTapped,
+                          : Padding(
+                              padding: EdgeInsets.only(
+                                left: comment.level * indentPadding +
+                                    indentLineWidth,
+                              ),
+                              child: CommentTile(
+                                comment: comment,
+                                backgroundColor: Theme.of(context).canvasColor,
+                                index: index,
+                                level: comment.level,
+                                opUsername: state.item.by,
+                                fetchMode: state.fetchMode,
+                                isResponse: state.isResponse(comment),
+                                isCompactCollapsedTileEnabled: preferenceState
+                                    .isCompactCollapsedTileEnabled,
+                                shouldHighlightNewComments:
+                                    preferenceState.shouldHighlightNewComments,
+                                isDev: preferenceState.isDevModeEnabled,
+                                isNew: shouldMarkNewComment &&
+                                    !comment.isFromCache,
+                                isEyeCandyEnabled:
+                                    preferenceState.isEyeCandyEnabled,
+                                onUpvoteTapped: (Comment cmt) =>
+                                    onUpvoteTapped(context, cmt),
+                                onReplyTapped: (Comment cmt) =>
+                                    onReplyTapped(context, cmt),
+                                onEditTapped: (Comment cmt) =>
+                                    onEditTapped(context, cmt),
+                                onMoreTapped: onMoreTapped,
+                                onRightMoreTapped: onRightMoreTapped,
+                              ),
                             ),
                     );
                   },
@@ -242,7 +258,6 @@ class _ParentItemSection extends StatelessWidget {
     required this.state,
     required this.authState,
     required this.preferenceState,
-    required this.topPadding,
     required this.splitViewEnabled,
     required this.onMoreTapped,
     required this.onUpvoteTapped,
@@ -252,7 +267,6 @@ class _ParentItemSection extends StatelessWidget {
   final CommentsState state;
   final AuthState authState;
   final PreferenceState preferenceState;
-  final double topPadding;
   final bool splitViewEnabled;
   final void Function(Item item, Rect? rect) onMoreTapped;
   final void Function(Item) onUpvoteTapped;

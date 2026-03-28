@@ -14,7 +14,7 @@ import 'package:hacki/extensions/extensions.dart';
 import 'package:hacki/models/models.dart';
 import 'package:hacki/repositories/repositories.dart';
 import 'package:hacki/screens/item/widgets/widgets.dart';
-import 'package:hacki/screens/widgets/download_progress_reminder.dart';
+import 'package:hacki/screens/widgets/widgets.dart';
 import 'package:hacki/services/services.dart';
 import 'package:hacki/styles/styles.dart';
 import 'package:hacki/utils/utils.dart';
@@ -172,6 +172,8 @@ class _ItemScreenState extends State<ItemScreen>
   static const Duration _storyLinkTapThrottleDelay = AppDurations.twoSeconds;
   static const Duration _featureDiscoveryDismissThrottleDelay =
       AppDurations.oneSecond;
+  static const double _indentPadding = 8;
+  static const double _indentLineWidth = 2;
 
   @override
   void didPop() {
@@ -190,6 +192,7 @@ class _ItemScreenState extends State<ItemScreen>
   @override
   void initState() {
     super.initState();
+
     SchedulerBinding.instance
       ..addPostFrameCallback((_) {
         FeatureDiscovery.discoverFeatures(
@@ -283,15 +286,38 @@ class _ItemScreenState extends State<ItemScreen>
                 ? Material(
                     child: Stack(
                       children: <Widget>[
+                        const Positioned.fill(
+                          child: ItemScreenBackground(
+                            indentPadding: _indentPadding,
+                            indentLineWidth: _indentLineWidth,
+                          ),
+                        ),
+                        Positioned(
+                          left: 4,
+                          child: Container(
+                            height: MediaQuery.of(context).size.height,
+                            width: 2,
+                            color: Colors.yellow,
+                          ),
+                        ),
+                        Positioned(
+                          left: 8,
+                          child: Container(
+                            height: MediaQuery.of(context).size.height,
+                            width: 2,
+                            color: Colors.pink,
+                          ),
+                        ),
                         Positioned.fill(
                           child: MainView(
+                            indentPadding: _indentPadding,
                             scrollOffsetListener: scrollOffsetListener,
                             commentEditingController: commentEditingController,
                             authState: authState,
                             preferenceState:
                                 context.read<PreferenceCubit>().state,
-                            topPadding: context.topPadding,
                             splitViewEnabled: widget.splitViewEnabled,
+                            indentLineWidth: _indentLineWidth,
                             onMoreTapped: (Item item, Rect? rect) =>
                                 onMoreTapped(
                               item,
@@ -378,15 +404,22 @@ class _ItemScreenState extends State<ItemScreen>
                     ),
                     body: Stack(
                       children: <Widget>[
+                        const Positioned.fill(
+                          child: ItemScreenBackground(
+                            indentPadding: _indentPadding,
+                            indentLineWidth: _indentLineWidth,
+                          ),
+                        ),
                         Positioned.fill(
                           child: MainView(
+                            indentPadding: _indentPadding,
                             scrollOffsetListener: scrollOffsetListener,
                             commentEditingController: commentEditingController,
                             authState: authState,
                             preferenceState:
                                 context.read<PreferenceCubit>().state,
-                            topPadding: context.topPadding,
                             splitViewEnabled: widget.splitViewEnabled,
+                            indentLineWidth: _indentLineWidth,
                             onMoreTapped: (Item context, Rect? rect) =>
                                 onMoreTapped(
                               context,
