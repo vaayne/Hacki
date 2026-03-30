@@ -271,9 +271,7 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
                   !shouldPrioritizeCache) {
                 logInfo('fetching comments of ${item.id} from web.');
                 commentStream = _hackerNewsWebRepository
-                    .fetchCommentsStream(
-                  state.item,
-                )
+                    .fetchCommentsStream(updatedItem)
                     .handleError((dynamic e) {
                   _streamSubscription?.cancel();
 
@@ -375,24 +373,20 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
         await _hackerNewsRepository.fetchItem(id: item.id) ?? item;
 
     /// If descendants has not changed, abort fetching.
-    if (item is Story) {
-      if (item.descendants == updatedItem.descendants) {
-        if (hasNewComment) {
-          final List<Comment> updatedComments = <Comment>[];
-          for (final Comment cmt in state.comments) {
-            updatedComments.add(
-              cmt.copyWith(isNew: false),
-            );
-          }
-
-          emit(state.copyWith(comments: updatedComments));
+    if (item is Story && item.descendants == updatedItem.descendants) {
+      if (hasNewComment) {
+        final List<Comment> updatedComments = <Comment>[];
+        for (final Comment cmt in state.comments) {
+          updatedComments.add(
+            cmt.copyWith(isNew: false),
+          );
         }
 
-        emit(state.copyWith(status: CommentsStatus.allLoaded));
-        return;
-      } else {
-        _globalIdToStoryCache[item.id] = updatedItem as Story;
+        emit(state.copyWith(comments: updatedComments));
       }
+
+      emit(state.copyWith(status: CommentsStatus.allLoaded));
+      return;
     }
 
     await _streamSubscription?.cancel();
@@ -425,7 +419,7 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
                 'fetching comments of ${item.id} from web.',
               );
               commentStream = _hackerNewsWebRepository
-                  .fetchCommentsStream(state.item)
+                  .fetchCommentsStream(updatedItem)
                   .handleError((dynamic e) {
                 logError(e);
 
