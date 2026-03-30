@@ -228,10 +228,9 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
 
     final List<int> kids = _sortKids(updatedItem.kids);
 
-    emit(state.copyWith(item: updatedItem));
-
     late final Stream<Comment> commentStream;
-    final bool shouldShowCompletionSnackBar = !state.isOfflineReading;
+    final bool shouldShowCompletionSnackBar =
+        item is Story && !state.isOfflineReading;
 
     if (state.isOfflineReading) {
       commentStream = _offlineRepository.getCachedCommentsStream(
@@ -253,7 +252,6 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
         logInfo(
           '''first time visiting or updates in story, fetching from remote source.''',
         );
-        _globalIdToStoryCache[item.id] = updatedItem;
       }
 
       switch (state.fetchMode) {
@@ -337,9 +335,21 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
         .whereNotNull()
         .listen(_onCommentFetched)
       ..onDone(
-        () => _onDone(
-          isCompletionSnackBarEnabled: shouldShowCompletionSnackBar,
-        ),
+        () {
+          if (item is Story &&
+              state.comments.length >= updatedItem.descendants) {
+            _globalIdToStoryCache[item.id] = updatedItem as Story;
+            emit(
+              state.copyWith(
+                item: updatedItem,
+              ),
+            );
+          }
+
+          _onDone(
+            isCompletionSnackBarEnabled: shouldShowCompletionSnackBar,
+          );
+        },
       )
       ..onError((_) => emit(state.copyWith(status: CommentsStatus.error)));
   }
@@ -394,7 +404,6 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
 
     emit(
       state.copyWith(
-        item: updatedItem,
         comments: <Comment>[],
         currentPage: 0,
       ),
@@ -468,14 +477,19 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable {
         .asyncMap(_toBuildableComment)
         .whereNotNull()
         .listen(_onCommentFetched)
-      ..onDone(() => _onDone(isCompletionSnackBarEnabled: true))
-      ..onError((_) => emit(state.copyWith(status: CommentsStatus.error)));
+      ..onDone(() {
+        if (item is Story && state.comments.length >= updatedItem.descendants) {
+          _globalIdToStoryCache[item.id] = updatedItem as Story;
+          emit(
+            state.copyWith(
+              item: updatedItem,
+            ),
+          );
+        }
 
-    emit(
-      state.copyWith(
-        item: updatedItem,
-      ),
-    );
+        _onDone(isCompletionSnackBarEnabled: true);
+      })
+      ..onError((_) => emit(state.copyWith(status: CommentsStatus.error)));
   }
 
   void loadAll(Story story) {
