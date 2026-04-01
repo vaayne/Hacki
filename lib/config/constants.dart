@@ -59,7 +59,8 @@ abstract class Constants {
         'Text preview on collapsed comment can be turned off in settings',
         'Use lazy fetching to fetch only the root level comments',
         'Turn on True Dark Mode in settings to use black background',
-        'Download stories in settings to read stories while offline',
+        'Download stories in settings to read stories offline',
+        'Open any Hacker News links in Hacki via the system Share menu',
       ].randomlyPicked!;
 
   static final String happyFace = <String>[
@@ -122,6 +123,7 @@ abstract class AppDurations {
   static const Duration ms600 = Duration(milliseconds: 600);
   static const Duration ms800 = Duration(milliseconds: 800);
   static const Duration oneSecond = Duration(seconds: 1);
+  static const Duration oneAndHalfSeconds = Duration(milliseconds: 1500);
   static const Duration twoSeconds = Duration(seconds: 2);
   static const Duration threeSeconds = Duration(seconds: 3);
   static const Duration fourSeconds = Duration(seconds: 4);

@@ -139,6 +139,7 @@ class _NumberOfCommentsDialogState extends State<_NumberOfCommentsDialog> {
                   'Remove',
                 ),
               ),
+              SizedBoxes.pt6,
               ElevatedButton(
                 onPressed: () {
                   final int? commentsNumber =
@@ -150,17 +151,8 @@ class _NumberOfCommentsDialogState extends State<_NumberOfCommentsDialog> {
                   );
                   context.pop(filter);
                 },
-                style: ButtonStyle(
-                  backgroundColor: WidgetStateProperty.all(
-                    Theme.of(context).colorScheme.primaryContainer,
-                  ),
-                ),
-                child: Text(
+                child: const Text(
                   'Confirm',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.onPrimaryContainer,
-                  ),
                 ),
               ),
             ],
