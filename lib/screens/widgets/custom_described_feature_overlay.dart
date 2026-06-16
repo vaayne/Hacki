@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:feature_discovery/feature_discovery.dart';
 import 'package:flutter/material.dart';
+import 'package:hacki/l10n/app_localizations.dart';
+import 'package:hacki/l10n/feature_l10n.dart';
 import 'package:hacki/models/discoverable_feature.dart';
 import 'package:hacki/styles/styles.dart';
 import 'package:hacki/utils/utils.dart';
@@ -24,6 +26,7 @@ class CustomDescribedFeatureOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context);
     return DescribedFeatureOverlay(
       enablePulsingAnimation: !MediaQuery.of(context).disableAnimations,
       barrierDismissible: false,
@@ -33,7 +36,7 @@ class CustomDescribedFeatureOverlay extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
       tapTarget: tapTarget,
       title: Text(
-        feature.title,
+        localizedFeatureTitle(context, feature),
         style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
       ),
       description: Column(
@@ -41,7 +44,7 @@ class CustomDescribedFeatureOverlay extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            feature.description,
+            localizedFeatureDescription(context, feature),
             style: TextStyle(
               fontSize: TextDimens.pt16,
               color: Theme.of(context).colorScheme.onSurface,
@@ -49,7 +52,7 @@ class CustomDescribedFeatureOverlay extends StatelessWidget {
           ),
           SizedBoxes.pt6,
           Text(
-            'Tap anywhere inside to dismiss',
+            l10n.featureTapToDismiss,
             style: TextStyle(
               fontSize: TextDimens.pt12,
               color: Theme.of(context).hintColor,

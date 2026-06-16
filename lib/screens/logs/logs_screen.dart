@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hacki/extensions/context_extension.dart';
+import 'package:hacki/l10n/app_localizations.dart';
 import 'package:hacki/styles/styles.dart';
 import 'package:hacki/utils/haptic_feedback_utils.dart';
 import 'package:hacki/utils/log_utils.dart';
@@ -57,7 +58,9 @@ class _LogsScreenState extends State<LogsScreen> {
               Clipboard.setData(
                 ClipboardData(text: data),
               ).whenComplete(HapticFeedbackUtils.selection);
-              context.showSnackBar(content: 'Logs copied.');
+              context.showSnackBar(
+                content: AppLocalizations.of(context).snackLogsCopied,
+              );
             },
             icon: Icon(
               Icons.copy,

@@ -2,6 +2,7 @@ import 'package:feature_discovery/feature_discovery.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hacki/cubits/cubits.dart';
+import 'package:hacki/l10n/app_localizations.dart';
 import 'package:hacki/models/discoverable_feature.dart';
 import 'package:hacki/screens/widgets/widgets.dart';
 import 'package:hacki/utils/utils.dart';
@@ -17,7 +18,7 @@ class FavIconButton extends StatelessWidget {
       builder: (BuildContext context, FavState favState) {
         final bool isFav = favState.favIds.contains(storyId);
         return IconButton(
-          tooltip: 'Add to favorites',
+          tooltip: AppLocalizations.of(context).tooltipAddToFavorites,
           icon: CustomDescribedFeatureOverlay(
             tapTarget: Icon(
               isFav ? Icons.favorite : Icons.favorite_border,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hacki/l10n/app_localizations.dart';
 import 'package:hacki/screens/widgets/widgets.dart';
 
 typedef DateRangeCallback = void Function(DateTime, DateTime);
@@ -13,6 +14,16 @@ enum CustomDateTimeRange {
 
   final Duration duration;
   final String label;
+
+  String localizedLabel(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context);
+    return switch (this) {
+      CustomDateTimeRange.pastDay => l10n.rangePastDay,
+      CustomDateTimeRange.pastWeek => l10n.rangePastWeek,
+      CustomDateTimeRange.pastMonth => l10n.rangePastMonth,
+      CustomDateTimeRange.pastYear => l10n.rangePastYear,
+    };
+  }
 }
 
 class CustomRangeFilterChip extends StatelessWidget {
@@ -61,7 +72,7 @@ class CustomRangeFilterChip extends StatelessWidget {
         onTap(now.subtract(range.duration), now);
       },
       selected: false,
-      label: range.label,
+      label: range.localizedLabel(context),
     );
   }
 }

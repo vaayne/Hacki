@@ -6,6 +6,7 @@ import 'package:hacki/config/constants.dart';
 import 'package:hacki/config/paths.dart';
 import 'package:hacki/cubits/cubits.dart';
 import 'package:hacki/extensions/extensions.dart';
+import 'package:hacki/l10n/app_localizations.dart';
 import 'package:hacki/models/models.dart';
 import 'package:hacki/screens/profile/models/models.dart';
 import 'package:hacki/screens/profile/widgets/widgets.dart';
@@ -62,6 +63,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                 }
               },
           builder: (BuildContext context, NotificationState notificationState) {
+            final AppLocalizations l10n = AppLocalizations.of(context);
             final double topPadding =
                 context.watch<PreferenceCubit>().state.isHackerNewsThemeEnabled
                 ? Dimens.pt64
@@ -220,15 +222,15 @@ class _ProfileScreenState extends State<ProfileScreen>
                           const SizedBox(width: Dimens.pt12),
                           if (authState.isLoggedIn) ...<Widget>[
                             CustomChip(
-                              label: 'Submit',
+                              label: l10n.profileSubmit,
                               selected: false,
                               onSelected: (bool val) {
                                 if (authState.isLoggedIn) {
                                   context.push(Paths.item.submit);
                                 } else {
                                   showSnackBar(
-                                    content: 'You need to log in first.',
-                                    label: 'Log in',
+                                    content: l10n.profileNeedLoginFirst,
+                                    label: l10n.itemLogIn,
                                     action: onLoginTapped,
                                   );
                                 }
@@ -236,8 +238,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                             ),
                             const SizedBox(width: Dimens.pt12),
                             CustomChip(
-                              label:
-                                  '''Inbox : ${notificationState.unreadCommentsIds.length}''',
+                              label: l10n.profileInbox(
+                                notificationState.unreadCommentsIds.length,
+                              ),
                               selected: pageType == PageType.notification,
                               onSelected: (bool val) {
                                 if (val) {
@@ -250,7 +253,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                             const SizedBox(width: Dimens.pt12),
                           ],
                           CustomChip(
-                            label: 'Favorite',
+                            label: l10n.profileFavorite,
                             selected: pageType == PageType.fav,
                             onSelected: (bool val) {
                               if (val) {
@@ -263,7 +266,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                           const SizedBox(width: Dimens.pt12),
                           if (authState.isLoggedIn) ...<Widget>[
                             CustomChip(
-                              label: 'Submitted',
+                              label: l10n.profileSubmitted,
                               selected: pageType == PageType.history,
                               onSelected: (bool val) {
                                 if (val) {
@@ -276,7 +279,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                             const SizedBox(width: Dimens.pt12),
                           ],
                           CustomChip(
-                            label: 'Search',
+                            label: l10n.itemSearch,
                             selected: pageType == PageType.search,
                             onSelected: (bool val) {
                               if (val) {
@@ -288,7 +291,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                           ),
                           const SizedBox(width: Dimens.pt12),
                           CustomChip(
-                            label: 'Settings',
+                            label: l10n.settingsTitle,
                             selected: pageType == PageType.settings,
                             onSelected: (bool val) {
                               if (val) {

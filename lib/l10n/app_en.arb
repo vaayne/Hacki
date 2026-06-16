@@ -511,5 +511,70 @@
         "type": "int"
       }
     }
-  }
+  },
+  "tooltipGoToSettings": "Go to settings",
+  "tooltipAddToFavorites": "Add to favorites",
+  "tooltipPinToHome": "Pin to home screen",
+  "tooltipSearchInThread": "Search in thread",
+  "snackPinnedToHome": "Pinned to home page.",
+  "snackLogsCopied": "Logs copied.",
+  "snackLinkCopied": "Link copied.",
+  "ctxSearchHn": "Search HN",
+  "searchInThisThreadHint": "Search in this thread",
+  "searchResultsCount": "{count, plural, =1{1 result} other{{count} results}}",
+  "@searchResultsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "filterByOp": "by OP",
+  "filterByMe": "by me",
+  "filterNew": "new",
+  "filterClear": "clear",
+  "profileSubmit": "Submit",
+  "profileNeedLoginFirst": "You need to log in first.",
+  "profileInbox": "Inbox : {count}",
+  "@profileInbox": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "profileFavorite": "Favorite",
+  "profileSubmitted": "Submitted",
+  "commentsFetched": "{count, plural, =1{1 new comment fetched.} other{{count} new comments fetched.}}",
+  "@commentsFetched": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "rangePastDay": "past day",
+  "rangePastWeek": "past week",
+  "rangePastMonth": "past month",
+  "rangePastYear": "past year",
+  "centeredHidden": "hidden",
+  "centeredDeleted": "deleted",
+  "centeredDead": "dead",
+  "centeredBlocked": "blocked",
+  "centeredEmpty": "empty",
+  "featureTapToDismiss": "Tap anywhere inside to dismiss",
+  "featureFavStoryTitle": "Fav a Story",
+  "featureFavStoryDesc": "Add it to your favorites.",
+  "featureGoToSettingsTitle": "Go to Settings",
+  "featureGoToSettingsDesc": "You can now go to settings page directly from a thread.",
+  "featureLoginTitle": "Log in for more",
+  "featureLoginDesc": "Log in using your Hacker News account to check out stories and comments you have posted in the past, and get in-app notification when there is new reply to your comments or stories.",
+  "featurePinStoryTitle": "Pin a Story",
+  "featurePinStoryDesc": "Pin this story to the top of your home screen so that you can come back later.",
+  "featureJumpUpTitle": "Shortcut",
+  "featureJumpUpDesc": "Tapping on this button will take you to the previous root level comment.\n\nLong press on it to jump to the very beginning of this thread.",
+  "featureJumpDownTitle": "Shortcut",
+  "featureJumpDownDesc": "Tapping on this button will take you to the next root level comment.\n\nLong press on it to jump to the end of this thread.",
+  "featureSearchInThreadTitle": "Search in Thread",
+  "featureSearchInThreadDesc": "Search for comments in this thread."
 }
