@@ -532,7 +532,7 @@ class _ItemScreenState extends State<ItemScreen>
           PopupMenuItem<FontSize>(
             value: fontSize,
             child: Text(
-              fontSize.description,
+              fontSize.label(context),
               style: TextStyle(
                 fontSize: fontSize.fontSize,
                 color:

@@ -23,6 +23,7 @@ import 'package:hacki/config/router.dart';
 import 'package:hacki/cubits/cubits.dart';
 import 'package:hacki/extensions/extensions.dart';
 import 'package:hacki/l10n/app_localizations.dart';
+import 'package:hacki/l10n/preference_l10n.dart';
 import 'package:hacki/models/models.dart';
 import 'package:hacki/repositories/repositories.dart';
 import 'package:hacki/screens/home/home_screen.dart';
@@ -154,7 +155,7 @@ class _SettingsViewState extends State<SettingsView>
                                 (CommentsOrder val) =>
                                     DropdownMenuEntry<CommentsOrder>(
                                       value: val,
-                                      label: val.description,
+                                      label: val.label(context),
                                     ),
                               )
                               .toList(),
@@ -324,7 +325,7 @@ class _SettingsViewState extends State<SettingsView>
                         SizedBoxes.pt12,
                         const Flexible(child: Divider()),
                         SizedBoxes.pt12,
-                        Text(preference.label),
+                        Text(localizedDividerLabel(context, preference)),
                         SizedBoxes.pt12,
                         const Flexible(child: Divider()),
                         SizedBoxes.pt12,
@@ -337,7 +338,9 @@ class _SettingsViewState extends State<SettingsView>
                       enabled: preference.dependencies.satisfy(
                         preferenceState.preferences,
                       ),
-                      title: Text(preference.title),
+                      title: Text(
+                        localizedPreferenceTitle(context, preference),
+                      ),
                       trailing: SegmentedButton<bool>(
                         showSelectedIcon: false,
                         segments: <ButtonSegment<bool>>[
@@ -374,9 +377,13 @@ class _SettingsViewState extends State<SettingsView>
                 else
                   SwitchListTile(
                     key: ValueKey<String>(preference.key),
-                    title: Text(preference.title),
-                    subtitle: preference.subtitle.isNotEmpty
-                        ? Text(preference.subtitle)
+                    title: Text(localizedPreferenceTitle(context, preference)),
+                    subtitle:
+                        localizedPreferenceSubtitle(
+                          context,
+                          preference,
+                        ).isNotEmpty
+                        ? Text(localizedPreferenceSubtitle(context, preference))
                         : null,
                     value: preferenceState.isOn(
                       preference as BooleanPreference,
@@ -409,7 +416,12 @@ class _SettingsViewState extends State<SettingsView>
                     ),
                     child: DropdownMenu<StoryMarkingMode>(
                       enabled: preferenceState.isMarkReadStoriesEnabled,
-                      label: Text(StoryMarkingModePreference().title),
+                      label: Text(
+                        localizedPreferenceTitle(
+                          context,
+                          StoryMarkingModePreference(),
+                        ),
+                      ),
                       initialSelection: preferenceState.storyMarkingMode,
                       onSelected: (StoryMarkingMode? storyMarkingMode) {
                         if (storyMarkingMode != null) {
@@ -426,7 +438,7 @@ class _SettingsViewState extends State<SettingsView>
                             (StoryMarkingMode val) =>
                                 DropdownMenuEntry<StoryMarkingMode>(
                                   value: val,
-                                  label: val.label,
+                                  label: val.localizedLabel(context),
                                 ),
                           )
                           .toList(),
@@ -714,7 +726,7 @@ class _SettingsViewState extends State<SettingsView>
       builder: (_) {
         return AlertDialog(
           contentPadding: const EdgeInsets.all(Dimens.pt18),
-          title: Text(AppColorPreference().title),
+          title: Text(localizedPreferenceTitle(context, AppColorPreference())),
           content: MaterialColorPicker(
             colors: materialColors,
             selectedColor: context.read<PreferenceCubit>().state.appColor,
@@ -1064,7 +1076,7 @@ class _SettingsViewState extends State<SettingsView>
               ...ExportDestination.values.map(
                 (ExportDestination e) => ListTile(
                   leading: Icon(e.icon),
-                  title: Text(e.label),
+                  title: Text(e.localizedLabel(context)),
                   onTap: () => context.pop<ExportDestination>(e),
                 ),
               ),

@@ -118,7 +118,7 @@ class OfflineListTile extends StatelessWidget {
                             for (final MaxOfflineStoriesCount count
                                 in MaxOfflineStoriesCount.values)
                               ListTile(
-                                title: Text(count.label),
+                                title: Text(count.localizedLabel(context)),
                                 onTap: () {
                                   HapticFeedbackUtils.selection();
 
