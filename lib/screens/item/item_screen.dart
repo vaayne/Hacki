@@ -10,6 +10,7 @@ import 'package:hacki/config/constants.dart';
 import 'package:hacki/config/locator.dart';
 import 'package:hacki/cubits/cubits.dart';
 import 'package:hacki/extensions/extensions.dart';
+import 'package:hacki/l10n/app_localizations.dart';
 import 'package:hacki/models/models.dart';
 import 'package:hacki/repositories/repositories.dart';
 import 'package:hacki/screens/item/widgets/widgets.dart';
@@ -235,12 +236,12 @@ class _ItemScreenState extends State<ItemScreen>
       listeners: <BlocListener<dynamic, dynamic>>[
         BlocListener<PostCubit, PostState>(
           listener: (BuildContext context, PostState postState) {
+            final AppLocalizations l10n = AppLocalizations.of(context);
             if (postState.status == Status.success) {
-              final String verb =
+              final String msg =
                   context.read<EditCubit>().state.replyingTo == null
-                  ? 'updated'
-                  : 'submitted';
-              final String msg = 'Comment $verb! ${Constants.happyFace}';
+                  ? l10n.itemCommentUpdated(Constants.happyFace)
+                  : l10n.itemCommentSubmitted(Constants.happyFace);
               HapticFeedbackUtils.success();
               showSnackBar(content: msg);
               context.read<EditCubit>().onReplySubmittedSuccessfully();
@@ -558,13 +559,14 @@ class _ItemScreenState extends State<ItemScreen>
     showModalBottomSheet<void>(
       context: context,
       builder: (BuildContext context) {
+        final AppLocalizations l10n = AppLocalizations.of(context);
         return SafeArea(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               ListTile(
                 leading: const Icon(Icons.av_timer),
-                title: const Text('View ancestors'),
+                title: Text(l10n.itemViewAncestors),
                 onTap: () {
                   context.pop();
                   DialogProxy.showTimeMachineDialog(
@@ -578,7 +580,7 @@ class _ItemScreenState extends State<ItemScreen>
               ),
               ListTile(
                 leading: const Icon(Icons.list),
-                title: const Text('View in separate thread'),
+                title: Text(l10n.itemViewInSeparateThread),
                 onTap: () {
                   locator.get<AppReviewService>().requestReview();
                   context.pop();

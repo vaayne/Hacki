@@ -6,6 +6,7 @@ import 'package:hacki/config/constants.dart';
 import 'package:hacki/config/paths.dart';
 import 'package:hacki/cubits/cubits.dart';
 import 'package:hacki/extensions/extensions.dart';
+import 'package:hacki/l10n/app_localizations.dart';
 import 'package:hacki/models/models.dart';
 import 'package:hacki/screens/item/models/models.dart';
 import 'package:hacki/screens/item/widgets/widgets.dart';
@@ -102,15 +103,16 @@ mixin ItemActionMixin<T extends StatefulWidget> on State<T> {
   }
 
   void onFavTapped(Item item) {
+    final AppLocalizations l10n = AppLocalizations.of(context);
     final FavCubit favCubit = context.read<FavCubit>();
     final bool isFav = favCubit.state.favIds.contains(item.id);
     if (isFav) {
       favCubit.removeFav(item.id);
-      showSnackBar(content: 'Removed from favorites.');
+      showSnackBar(content: l10n.actionRemovedFromFavorites);
       HapticFeedbackUtils.success();
     } else {
       favCubit.addFav(item.id);
-      showSnackBar(content: 'Added to favorites.');
+      showSnackBar(content: l10n.actionAddedToFavorites);
       HapticFeedbackUtils.success();
     }
   }
@@ -120,24 +122,25 @@ mixin ItemActionMixin<T extends StatefulWidget> on State<T> {
     linkToShare = await showModalBottomSheet<String>(
       context: context,
       builder: (BuildContext context) {
+        final AppLocalizations l10n = AppLocalizations.of(context);
         return SafeArea(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               ListTile(
                 onTap: () => context.pop('image'),
-                title: const Text('Share as image'),
+                title: Text(l10n.actionShareAsImage),
               ),
               if (item.url.isNotEmpty)
                 ListTile(
                   onTap: () => context.pop(item.url),
-                  title: const Text('Link to article'),
+                  title: Text(l10n.actionLinkToArticle),
                 ),
               ListTile(
                 onTap: () => context.pop(
                   '${Constants.hackerNewsItemLinkPrefix}${item.id}',
                 ),
-                title: const Text('Link to HN'),
+                title: Text(l10n.actionLinkToHn),
               ),
             ],
           ),
@@ -158,23 +161,24 @@ mixin ItemActionMixin<T extends StatefulWidget> on State<T> {
   }
 
   void onFlagTapped(Item item) {
+    final AppLocalizations l10n = AppLocalizations.of(context);
     showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Flag this comment?'),
+          title: Text(l10n.actionFlagThisComment),
           content: Text(
-            'Flag this comment posted by ${item.by}?',
+            l10n.actionFlagThisCommentBy(item.by),
             style: const TextStyle(color: Palette.grey),
           ),
           actions: <Widget>[
             TextButton(
               onPressed: () => context.pop(false),
-              child: const Text('Cancel'),
+              child: Text(l10n.actionCancel),
             ),
             TextButton(
               onPressed: () => context.pop(true),
-              child: const Text('Yes'),
+              child: Text(l10n.actionYes),
             ),
           ],
         );
@@ -182,32 +186,35 @@ mixin ItemActionMixin<T extends StatefulWidget> on State<T> {
     ).then((bool? yesTapped) {
       if (mounted && (yesTapped ?? false)) {
         context.read<AuthBloc>().add(AuthFlag(item: item));
-        showSnackBar(content: 'Comment flagged!');
+        showSnackBar(content: l10n.actionCommentFlagged);
         HapticFeedbackUtils.success();
       }
     });
   }
 
   void onBlockTapped(Item item, {required bool isBlocked}) {
+    final AppLocalizations l10n = AppLocalizations.of(context);
     showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('${isBlocked ? 'Unblock' : 'Block'} this user?'),
+          title: Text(
+            isBlocked ? l10n.actionUnblockThisUser : l10n.actionBlockThisUser,
+          ),
           content: Text(
-            'Do you want to ${isBlocked ? 'unblock' : 'block'} ${item.by}'
-            ' and ${isBlocked ? 'display' : 'hide'} '
-            'comments posted by this user?',
+            isBlocked
+                ? l10n.actionUnblockUserConfirm(item.by)
+                : l10n.actionBlockUserConfirm(item.by),
             style: const TextStyle(color: Palette.grey),
           ),
           actions: <Widget>[
             TextButton(
               onPressed: () => context.pop(false),
-              child: const Text('Cancel'),
+              child: Text(l10n.actionCancel),
             ),
             TextButton(
               onPressed: () => context.pop(true),
-              child: const Text('Yes'),
+              child: Text(l10n.actionYes),
             ),
           ],
         );
@@ -222,7 +229,11 @@ mixin ItemActionMixin<T extends StatefulWidget> on State<T> {
           context.read<BlocklistCubit>().addToBlocklist(item.by);
         }
 
-        showSnackBar(content: 'User ${isBlocked ? 'unblocked' : 'blocked'}!');
+        showSnackBar(
+          content: isBlocked
+              ? l10n.actionUserUnblocked
+              : l10n.actionUserBlocked,
+        );
         HapticFeedbackUtils.success();
       }
     });

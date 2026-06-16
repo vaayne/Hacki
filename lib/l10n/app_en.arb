@@ -198,5 +198,158 @@
   "storyMarkingModeSwipeGestureOnly": "swipe gesture only",
   "maxOfflineStoriesCountAll": "All",
   "exportDestinationQrCode": "QR code",
-  "exportDestinationClipboard": "ClipBoard"
+  "exportDestinationClipboard": "ClipBoard",
+  "itemLogIn": "Log in",
+  "itemAboutUserSemantics": "About {id}. {about}",
+  "@itemAboutUserSemantics": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      },
+      "about": {
+        "type": "String"
+      }
+    }
+  },
+  "itemAboutUser": "About {id}",
+  "@itemAboutUser": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "itemEmpty": "empty",
+  "itemSearch": "Search",
+  "itemOkay": "Okay",
+  "itemSearchOnHn": "Search on HN",
+  "itemSearchInThread": "Search in thread",
+  "itemUpvoted": "Upvoted",
+  "itemUpvote": "Upvote",
+  "itemDownvoted": "Downvoted",
+  "itemDownvote": "Downvote",
+  "itemUnfavorite": "Unfavorite",
+  "itemFavorite": "Favorite",
+  "itemShare": "Share",
+  "itemFlag": "Flag",
+  "itemUnblock": "Unblock",
+  "itemBlock": "Block",
+  "itemViewInBrowser": "View in Browser",
+  "itemCancel": "Cancel",
+  "itemCommentUpdated": "Comment updated! {face}",
+  "@itemCommentUpdated": {
+    "placeholders": {
+      "face": {
+        "type": "String"
+      }
+    }
+  },
+  "itemCommentSubmitted": "Comment submitted! {face}",
+  "@itemCommentSubmitted": {
+    "placeholders": {
+      "face": {
+        "type": "String"
+      }
+    }
+  },
+  "itemViewAncestors": "View ancestors",
+  "itemViewInSeparateThread": "View in separate thread",
+  "itemTimeForBed": "Time for bed",
+  "itemHackiAnniversary": "Hacki turns {years} today!",
+  "@itemHackiAnniversary": {
+    "placeholders": {
+      "years": {
+        "type": "Object"
+      }
+    }
+  },
+  "itemLinkCopied": "Link copied.",
+  "itemViewAllComments": "View all comments",
+  "itemViewParent": "View Parent",
+  "itemViewRoot": "View Root",
+  "itemNothingYet": "Nothing yet",
+  "itemEditing": "Editing",
+  "itemReplyingTo": "Replying to {username}",
+  "@itemReplyingTo": {
+    "placeholders": {
+      "username": {
+        "type": "String"
+      }
+    }
+  },
+  "itemAbortEditing": "Abort editing?",
+  "itemNo": "No",
+  "itemYes": "Yes",
+  "itemViewThread": "View thread",
+  "itemCopyAll": "Copy all",
+  "itemLoggedInSuccessfully": "Logged in successfully! {face}",
+  "@itemLoggedInSuccessfully": {
+    "placeholders": {
+      "face": {
+        "type": "String"
+      }
+    }
+  },
+  "itemUsername": "Username",
+  "itemPassword": "Password",
+  "itemIAgreeTo": "I agree to ",
+  "itemEndUserAgreement": "End User Agreement",
+  "itemTips": "Tips",
+  "itemTimeMachineTip": "When you find yourself too deep in a thread, you can swipe left on a comment to see all its ancestors including the root story (or comment).",
+  "itemDismiss": "Dismiss",
+  "itemLgtm": "LGTM",
+  "actionRemovedFromFavorites": "Removed from favorites.",
+  "actionAddedToFavorites": "Added to favorites.",
+  "actionShareAsImage": "Share as image",
+  "actionLinkToArticle": "Link to article",
+  "actionLinkToHn": "Link to HN",
+  "actionFlagThisComment": "Flag this comment?",
+  "actionFlagThisCommentBy": "Flag this comment posted by {username}?",
+  "@actionFlagThisCommentBy": {
+    "placeholders": {
+      "username": {
+        "type": "String"
+      }
+    }
+  },
+  "actionCancel": "Cancel",
+  "actionYes": "Yes",
+  "actionCommentFlagged": "Comment flagged!",
+  "actionUnblockThisUser": "Unblock this user?",
+  "actionBlockThisUser": "Block this user?",
+  "actionUnblockUserConfirm": "Do you want to unblock {username} and display comments posted by this user?",
+  "@actionUnblockUserConfirm": {
+    "placeholders": {
+      "username": {
+        "type": "String"
+      }
+    }
+  },
+  "actionBlockUserConfirm": "Do you want to block {username} and hide comments posted by this user?",
+  "@actionBlockUserConfirm": {
+    "placeholders": {
+      "username": {
+        "type": "String"
+      }
+    }
+  },
+  "actionUserUnblocked": "User unblocked!",
+  "actionUserBlocked": "User blocked!",
+  "dialogAbortDownloading": "Abort downloading?",
+  "dialogCancel": "Cancel",
+  "dialogNo": "No",
+  "dialogYes": "Yes",
+  "dialogDownloadCompleted": "Download completed",
+  "dialogNoooice": "Noooice!",
+  "itemKarmaAndComments": "{score} karma, {count} cmt{count, plural, one {} other {s}}",
+  "@itemKarmaAndComments": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

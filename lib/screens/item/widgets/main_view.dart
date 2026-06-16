@@ -10,6 +10,7 @@ import 'package:hacki/blocs/blocs.dart';
 import 'package:hacki/config/constants.dart';
 import 'package:hacki/cubits/cubits.dart';
 import 'package:hacki/extensions/extensions.dart';
+import 'package:hacki/l10n/app_localizations.dart';
 import 'package:hacki/models/models.dart';
 import 'package:hacki/screens/item/widgets/widgets.dart';
 import 'package:hacki/screens/widgets/widgets.dart';
@@ -91,6 +92,7 @@ class MainView extends StatelessWidget {
                   scrollOffsetListener: scrollOffsetListener,
                   minCacheExtent: WidgetUtils.calculateCacheExtent(context),
                   itemBuilder: (BuildContext context, int index) {
+                    final AppLocalizations l10n = AppLocalizations.of(context);
                     if (index == 0) {
                       return Material(
                         color: Theme.of(context).canvasColor,
@@ -149,7 +151,7 @@ class MainView extends StatelessWidget {
                                     )
                                   else if (DateUtils.isMidnight)
                                     Text(
-                                      'Time for bed',
+                                      l10n.itemTimeForBed,
                                       style: TextStyle(
                                         color: Theme.of(context).hintColor,
                                         fontSize: TextDimens.pt10,
@@ -159,7 +161,9 @@ class MainView extends StatelessWidget {
                                     )
                                   else if (DateUtils.isTodayAnniversary)
                                     Text(
-                                      '''Hacki turns ${DateUtils.yearsSinceFirstCommit} today!''',
+                                      l10n.itemHackiAnniversary(
+                                        DateUtils.yearsSinceFirstCommit,
+                                      ),
                                       style: TextStyle(
                                         color: Theme.of(context).hintColor,
                                         fontSize: TextDimens.pt10,
@@ -289,7 +293,7 @@ class MainView extends StatelessWidget {
             },
           );
         },
-        label: 'Log in',
+        label: AppLocalizations.of(context).itemLogIn,
       );
     }
   }
@@ -340,6 +344,7 @@ class _ParentItemSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context);
     final Item item = state.item;
     return Semantics(
       label:
@@ -462,7 +467,7 @@ class _ParentItemSection extends StatelessWidget {
                                     HapticFeedbackUtils.selection();
                                     if (context.mounted) {
                                       context.showSnackBar(
-                                        content: 'Link copied.',
+                                        content: l10n.itemLinkCopied,
                                       );
                                     }
                                   });
@@ -551,7 +556,7 @@ class _ParentItemSection extends StatelessWidget {
             Center(
               child: TextButton(
                 onPressed: () => context.read<CommentsCubit>().loadAll(item),
-                child: const Text('View all comments'),
+                child: Text(l10n.itemViewAllComments),
               ),
             ),
             const Divider(height: Dimens.zero),
@@ -563,7 +568,10 @@ class _ParentItemSection extends StatelessWidget {
                   if (item is Story) ...<Widget>[
                     const SizedBox(width: Dimens.pt12),
                     Text(
-                      '''${item.score} karma, ${item.descendants} cmt${item.descendants > 1 ? 's' : ''}''',
+                      l10n.itemKarmaAndComments(
+                        item.score,
+                        item.descendants,
+                      ),
                       style: Theme.of(context).textTheme.labelLarge,
                       textScaler: MediaQuery.of(context).clampedTextScaler,
                     ),
@@ -586,7 +594,7 @@ class _ParentItemSection extends StatelessWidget {
                                   ),
                                 )
                               : Text(
-                                  'View Parent',
+                                  l10n.itemViewParent,
                                   style: Theme.of(context).textTheme.labelLarge
                                       ?.copyWith(
                                         color: Theme.of(
@@ -616,7 +624,7 @@ class _ParentItemSection extends StatelessWidget {
                                   ),
                                 )
                               : Text(
-                                  'View Root',
+                                  l10n.itemViewRoot,
                                   style: Theme.of(context).textTheme.labelLarge
                                       ?.copyWith(
                                         color: Theme.of(
@@ -653,8 +661,11 @@ class _ParentItemSection extends StatelessWidget {
           if (state.comments.isEmpty &&
               state.status == CommentsStatus.allLoaded) ...<Widget>[
             const SizedBox(height: 240),
-            const Center(
-              child: Text('Nothing yet', style: TextStyle(color: Palette.grey)),
+            Center(
+              child: Text(
+                l10n.itemNothingYet,
+                style: const TextStyle(color: Palette.grey),
+              ),
             ),
             SizedBox(height: MediaQuery.of(context).size.height - 240),
           ],
