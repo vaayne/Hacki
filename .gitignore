@@ -34,6 +34,9 @@
 # Web related
 lib/generated_plugin_registrant.dart
 
+# Generated localizations (run `flutter gen-l10n`)
+lib/l10n/app_localizations*.dart
+
 # Symbolication related
 app.*.symbols
 

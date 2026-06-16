@@ -1,0 +1,17 @@
+{
+  "@@locale": "en",
+  "settingsTitle": "Settings",
+  "@settingsTitle": {
+    "description": "Title of the settings screen app bar."
+  },
+  "language": "Language",
+  "@language": {
+    "description": "Label for the in-app language selector."
+  },
+  "languageSystem": "System",
+  "@languageSystem": {
+    "description": "Language option that follows the system locale."
+  },
+  "languageEnglish": "English",
+  "languageChinese": "简体中文"
+}

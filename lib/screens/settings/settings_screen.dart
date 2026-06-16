@@ -22,6 +22,7 @@ import 'package:hacki/config/paths.dart';
 import 'package:hacki/config/router.dart';
 import 'package:hacki/cubits/cubits.dart';
 import 'package:hacki/extensions/extensions.dart';
+import 'package:hacki/l10n/app_localizations.dart';
 import 'package:hacki/models/models.dart';
 import 'package:hacki/repositories/repositories.dart';
 import 'package:hacki/screens/home/home_screen.dart';
@@ -48,7 +49,7 @@ class _SettingsScreenState extends State<SettingsScreen> with ItemActionMixin {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).canvasColor,
-        title: const Text('Settings'),
+        title: Text(AppLocalizations.of(context).settingsTitle),
       ),
       body: const SettingsView(),
     );
@@ -239,6 +240,43 @@ class _SettingsViewState extends State<SettingsView>
                     ),
                   ),
                 ],
+              ),
+              const SizedBox(height: Dimens.pt12),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: Dimens.pt16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(AppLocalizations.of(context).language),
+                      DropdownMenu<AppLanguage>(
+                        initialSelection: AppLanguage.values.elementAt(
+                          preferenceState.preferences
+                              .singleWhereType<LocalePreference>()
+                              .val,
+                        ),
+                        dropdownMenuEntries: AppLanguage.values
+                            .map(
+                              (AppLanguage val) =>
+                                  DropdownMenuEntry<AppLanguage>(
+                                    value: val,
+                                    label: val.label(context),
+                                  ),
+                            )
+                            .toList(),
+                        onSelected: (AppLanguage? language) {
+                          if (language != null) {
+                            HapticFeedbackUtils.selection();
+                            context.read<PreferenceCubit>().update(
+                              LocalePreference(val: language.index),
+                            );
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
               ),
               const SizedBox(height: Dimens.pt12),
               const TabBarSettings(),

@@ -1,4 +1,5 @@
 export 'app_exception.dart';
+export 'app_language.dart';
 export 'comments_order.dart';
 export 'date_display_format.dart';
 export 'discoverable_feature.dart';
