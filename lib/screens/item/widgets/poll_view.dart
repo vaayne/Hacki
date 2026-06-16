@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_fadein/flutter_fadein.dart';
 import 'package:hacki/blocs/auth/auth_bloc.dart';
-import 'package:hacki/config/constants.dart';
 import 'package:hacki/cubits/cubits.dart';
 import 'package:hacki/extensions/extensions.dart';
+import 'package:hacki/l10n/app_localizations.dart';
 import 'package:hacki/models/models.dart';
 import 'package:hacki/styles/styles.dart';
 import 'package:hacki/utils/utils.dart';
@@ -21,6 +21,7 @@ class _PollViewState extends State<PollView> with ItemActionMixin {
   Widget build(BuildContext context) {
     return BlocBuilder<PollCubit, PollState>(
       builder: (BuildContext context, PollState state) {
+        final AppLocalizations l10n = AppLocalizations.of(context);
         return Column(
           children: <Widget>[
             if (state.status == Status.inProgress) ...<Widget>[
@@ -31,7 +32,7 @@ class _PollViewState extends State<PollView> with ItemActionMixin {
                 children: <Widget>[
                   const SizedBox(width: Dimens.pt24),
                   Text(
-                    'Total votes: ${state.totalVotes}',
+                    l10n.pollTotalVotes(state.totalVotes),
                     style: const TextStyle(fontSize: TextDimens.pt14),
                   ),
                 ],
@@ -50,28 +51,31 @@ class _PollViewState extends State<PollView> with ItemActionMixin {
                       return previous.status != current.status;
                     },
                     listener: (BuildContext context, VoteState voteState) {
+                      final AppLocalizations l10n = AppLocalizations.of(
+                        context,
+                      );
                       ScaffoldMessenger.of(context).clearSnackBars();
                       if (voteState.status == VoteStatus.submitted) {
-                        showSnackBar(content: SnackBarMessages.voteSubmitted);
+                        showSnackBar(content: l10n.snackVoteSubmitted);
                       } else if (voteState.status == VoteStatus.canceled) {
-                        showSnackBar(content: SnackBarMessages.voteCanceled);
+                        showSnackBar(content: l10n.snackVoteCanceled);
                       } else if (voteState.status == VoteStatus.failure) {
                         showErrorSnackBar();
                       } else if (voteState.status ==
                           VoteStatus.failureKarmaBelowThreshold) {
-                        showSnackBar(content: SnackBarMessages.karmalyBroke);
+                        showSnackBar(content: l10n.snackKarmalyBroke);
                       } else if (voteState.status ==
                           VoteStatus.failureNotLoggedIn) {
                         showSnackBar(
-                          content: SnackBarMessages.notLoggedInNoVoting,
+                          content: l10n.snackNotLoggedInNoVoting,
                           persist: false,
                           action: onLoginTapped,
-                          label: 'Log in',
+                          label: l10n.itemLogIn,
                         );
                       } else if (voteState.status ==
                           VoteStatus.failureBeHumble) {
                         showSnackBar(
-                          content: SnackBarMessages.noVotingOnYourOwnComment,
+                          content: l10n.snackNoVotingOwnPost,
                         );
                       }
                     },
@@ -103,7 +107,7 @@ class _PollViewState extends State<PollView> with ItemActionMixin {
                                 children: <Widget>[
                                   Text(option.text),
                                   Text(
-                                    '''${option.score} vote${option.score > 1 ? 's' : ''}''',
+                                    l10n.pollVoteCount(option.score),
                                     style: const TextStyle(
                                       color: Palette.grey,
                                       fontSize: TextDimens.pt12,

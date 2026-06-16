@@ -478,5 +478,38 @@
   "commonDeleted": "deleted",
   "commonFetchingData": "Fetching data...",
   "commonLinkPreviewError": "Oops! Unable to parse the url. We have sent feedback to our developers & we will try to fix this in our next release. Thanks!",
-  "commonNoCommentYet": "no comment yet."
+  "commonNoCommentYet": "no comment yet.",
+  "tip1": "Swipe right on story title to vote or share",
+  "tip2": "Long press on story title to copy its article URL",
+  "tip3": "Long press on any link in comment or story to copy",
+  "tip4": "Long press and select text in comment to search on HN",
+  "tip5": "Text preview on collapsed comment can be turned off in settings",
+  "tip6": "Use lazy fetching to fetch only the root level comments",
+  "tip7": "Turn on True Dark Mode in settings to use black background",
+  "tip8": "Download stories in settings to read stories offline",
+  "tip9": "Open any Hacker News links in Hacki via the system share menu",
+  "tip10": "Swipe right on a comment and tap the dots icon to search for the poster within the thread or across HN",
+  "tip11": "Disabling `Mark Read Stories` in settings will clear your existing read history",
+  "tip12": "What's beyond the universe?",
+  "snackVoteSubmitted": "Vote submitted.",
+  "snackVoteCanceled": "Vote canceled.",
+  "snackKarmalyBroke": "You can't downvote because you are karmaly broke.",
+  "snackNotLoggedInNoVoting": "Not logged in, no voting! (;｀O´)o",
+  "snackNoVotingOwnPost": "No voting on your own post! (;｀O´)o",
+  "pollTotalVotes": "Total votes: {count}",
+  "@pollTotalVotes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pollVoteCount": "{count, plural, =1{1 vote} other{{count} votes}}",
+  "@pollVoteCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

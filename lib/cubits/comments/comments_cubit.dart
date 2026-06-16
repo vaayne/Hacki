@@ -103,7 +103,7 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable, BuildableMixin {
   final Map<int, StreamSubscription<Comment>> _streamSubscriptions =
       <int, StreamSubscription<Comment>>{};
 
-  final String currentTips = Constants.tips;
+  final int currentTipIndex = Constants.randomTipIndex;
 
   static const int _webFetchingCmtCountLowerLimit = 5;
   static DateTime? _hackerNewsWebRetryAfterDateTime;

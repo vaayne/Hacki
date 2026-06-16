@@ -11,6 +11,7 @@ import 'package:hacki/config/constants.dart';
 import 'package:hacki/cubits/cubits.dart';
 import 'package:hacki/extensions/extensions.dart';
 import 'package:hacki/l10n/app_localizations.dart';
+import 'package:hacki/l10n/tips_l10n.dart';
 import 'package:hacki/models/models.dart';
 import 'package:hacki/screens/item/widgets/widgets.dart';
 import 'package:hacki/screens/widgets/widgets.dart';
@@ -180,7 +181,12 @@ class MainView extends StatelessWidget {
                                     ),
                                   SizedBoxes.pt36,
                                   Text(
-                                    context.read<CommentsCubit>().currentTips,
+                                    localizedTip(
+                                      context,
+                                      context
+                                          .read<CommentsCubit>()
+                                          .currentTipIndex,
+                                    ),
                                     style: TextStyle(
                                       fontSize: TextDimens.pt10,
                                       color: Theme.of(context).hintColor,
@@ -277,12 +283,14 @@ class MainView extends StatelessWidget {
       );
       final bool res = await cubit.upvote();
       if (res && context.mounted) {
-        context.showSnackBar(content: SnackBarMessages.voteSubmitted);
+        context.showSnackBar(
+          content: AppLocalizations.of(context).snackVoteSubmitted,
+        );
       }
     } else {
       HapticFeedbackUtils.error();
       context.showSnackBar(
-        content: SnackBarMessages.notLoggedInNoVoting,
+        content: AppLocalizations.of(context).snackNotLoggedInNoVoting,
         persist: false,
         action: () {
           showDialog<void>(

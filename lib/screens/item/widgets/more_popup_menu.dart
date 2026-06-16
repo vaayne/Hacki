@@ -42,24 +42,24 @@ class MorePopupMenu extends StatelessWidget {
         listener: (BuildContext context, VoteState voteState) {
           final AppLocalizations l10n = AppLocalizations.of(context);
           if (voteState.status == VoteStatus.submitted) {
-            context.showSnackBar(content: SnackBarMessages.voteSubmitted);
+            context.showSnackBar(content: l10n.snackVoteSubmitted);
           } else if (voteState.status == VoteStatus.canceled) {
-            context.showSnackBar(content: SnackBarMessages.voteCanceled);
+            context.showSnackBar(content: l10n.snackVoteCanceled);
           } else if (voteState.status == VoteStatus.failure) {
             context.showErrorSnackBar();
           } else if (voteState.status ==
               VoteStatus.failureKarmaBelowThreshold) {
-            context.showSnackBar(content: SnackBarMessages.karmalyBroke);
+            context.showSnackBar(content: l10n.snackKarmalyBroke);
           } else if (voteState.status == VoteStatus.failureNotLoggedIn) {
             context.showSnackBar(
-              content: SnackBarMessages.notLoggedInNoVoting,
+              content: l10n.snackNotLoggedInNoVoting,
               persist: false,
               action: onLoginTapped,
               label: l10n.itemLogIn,
             );
           } else if (voteState.status == VoteStatus.failureBeHumble) {
             context.showSnackBar(
-              content: SnackBarMessages.noVotingOnYourOwnComment,
+              content: l10n.snackNoVotingOwnPost,
             );
           }
 
