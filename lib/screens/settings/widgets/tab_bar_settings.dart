@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hacki/cubits/cubits.dart';
+import 'package:hacki/l10n/app_localizations.dart';
 import 'package:hacki/models/models.dart';
 import 'package:hacki/styles/styles.dart';
 import 'package:hacki/utils/utils.dart';
@@ -20,11 +21,11 @@ class _TabBarSettingsState extends State<TabBarSettings> {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        const Row(
+        Row(
           children: <Widget>[
-            SizedBox(width: Dimens.pt16),
-            Text('Default tab bar'),
-            Spacer(),
+            const SizedBox(width: Dimens.pt16),
+            Text(AppLocalizations.of(context).settingsDefaultTabBar),
+            const Spacer(),
           ],
         ),
         BlocBuilder<TabCubit, TabState>(

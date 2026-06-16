@@ -13,5 +13,116 @@
     "description": "Language option that follows the system locale."
   },
   "languageEnglish": "English",
-  "languageChinese": "简体中文"
+  "languageChinese": "简体中文",
+  "settingsLogIn": "Log In",
+  "settingsLogOut": "Log Out",
+  "settingsLogOutConfirmation": "Log out as {username}?",
+  "@settingsLogOutConfirmation": {
+    "placeholders": {
+      "username": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsDefaultFetchMode": "Default fetch mode",
+  "settingsDefaultCommentsOrder": "Default comments order",
+  "settingsDateTimeDisplayOfComments": "Date time display of comments",
+  "settingsDataSource": "Data source",
+  "settingsLeft": "Left",
+  "settingsRight": "Right",
+  "settingsAccentColor": "Accent Color",
+  "settingsFont": "Font",
+  "settingsTheme": "Theme",
+  "settingsLight": "Light",
+  "settingsDark": "Dark",
+  "settingsSystem": "System",
+  "settingsFilterKeywords": "Filter Keywords",
+  "settingsFilterKeywordsDescription": "story or comment that contains keywords here will be hidden.",
+  "settingsAddKeyword": "Add keyword",
+  "settingsOkay": "Okay",
+  "settingsExportFavorites": "Export Favorites",
+  "settingsImportFavorites": "Import Favorites",
+  "settingsClearFavorites": "Clear Favorites",
+  "settingsClearCache": "Clear Cache",
+  "settingsClearCacheConfirmation": "Clear cache?",
+  "settingsClearCacheDescription": "Clear all cached images, stories and comments.",
+  "settingsCacheCleared": "Cache cleared!",
+  "settingsRestoreDefaultSettings": "Restore Default Settings",
+  "settingsRestoreDefaultSettingsConfirmation": "Restore default settings?",
+  "settingsRestoreDefaultSettingsDescription": "Your existing settings will be wiped out.",
+  "settingsDefaultSettingsRestored": "Default settings restored.",
+  "settingsLogs": "Logs",
+  "settingsResetFeatureDiscovery": "Reset Feature Discovery",
+  "settingsResetTips": "Reset Tips",
+  "settingsFeatureRequest": "Feature Request",
+  "settingsRateHacki": "Rate Hacki : )",
+  "settingsAbout": "About",
+  "settingsDevModeOn": "You are a dev now.",
+  "settingsDevModeOff": "Dev mode disabled.",
+  "settingsDisableHackerNewsThemeFirst": "Please disable Hacker News Theme first.",
+  "settingsDeveloper": "Developer",
+  "settingsSourceCode": "Source code",
+  "settingsLikeThisApp": "Like this app?",
+  "settingsMusicIListenTo": "Music I listen to",
+  "settingsPrivacyPolicy": "Privacy policy",
+  "settingsReportIssue": "Report issue",
+  "settingsEmail": "Email",
+  "settingsCancel": "Cancel",
+  "settingsConfirm": "Confirm",
+  "settingsYes": "Yes",
+  "settingsNo": "No",
+  "settingsQrCode": "QR Code",
+  "settingsFromFile": "From File",
+  "settingsCouldNotReadFile": "Could not read file.",
+  "settingsFavoritesImported": "Favorites imported successfully.",
+  "settingsNoFavoriteItem": "You don't have any favorite item.",
+  "settingsFavoritesCopied": "Ids of favorites have been copied to clipboard.",
+  "settingsRemoveAllFavoritesConfirmation": "Remove all favorites?",
+  "settingsRemoveAllFavoritesDescription": "This will not effect favorites saved in your Hacker News account.",
+  "settingsAllFavoritesRemoved": "All favorites have been removed.",
+  "settingsOfflineMode": "Offline Mode",
+  "settingsOfflineModeActivated": "Offline mode activated.",
+  "settingsOfflineModeDeactivated": "Offline mode deactivated.",
+  "settingsDownloadStories": "Download Stories",
+  "settingsDownloadingStories": "Downloading Stories ({downloaded}/{total})",
+  "@settingsDownloadingStories": {
+    "placeholders": {
+      "downloaded": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsStoriesDownloaded": "{count} stories downloaded.",
+  "@settingsStoriesDownloaded": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsDownloadStoriesDescription": "download latest stories that have at least one comment for offline reading. (Please keep Hacki in foreground while downloading.)",
+  "settingsLastDownloadedAt": "Last downloaded at {time}",
+  "@settingsLastDownloadedAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsHowManyStories": "How many stories do you want to download?",
+  "settingsDownloadWebPages": "Download web pages as well?",
+  "settingsDownloadWebPagesDescription": "It will take longer time.",
+  "settingsDefaultTabBar": "Default tab bar",
+  "settingsTextScaleFactor": "Text scale factor: {value}",
+  "@settingsTextScaleFactor": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsSystemDefault": "system default"
 }
