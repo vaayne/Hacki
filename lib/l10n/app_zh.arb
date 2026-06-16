@@ -357,5 +357,6 @@
   "featureJumpDownTitle": "快捷操作",
   "featureJumpDownDesc": "点击此按钮可跳转到下一条根层级评论。\n\n长按它可跳转到此主题的末尾。",
   "featureSearchInThreadTitle": "在主题中搜索",
-  "featureSearchInThreadDesc": "在此主题中搜索评论。"
+  "featureSearchInThreadDesc": "在此主题中搜索评论。",
+  "notificationNewReply": "你有一条新回复！"
 }

@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hacki/config/constants.dart';
+import 'package:hacki/l10n/app_localizations.dart';
 import 'package:hacki/models/models.dart';
 import 'package:hacki/repositories/repositories.dart';
 import 'package:hacki/utils/utils.dart';
@@ -128,9 +130,20 @@ abstract class Fetcher {
 
         await preferenceRepository.updateHasPushed(newReply!.id);
 
+        final int localeIndex =
+            await preferenceRepository.getInt('locale') ??
+            AppLanguage.system.index;
+        final Locale? chosenLocale =
+            localeIndex >= 0 && localeIndex < AppLanguage.values.length
+            ? AppLanguage.values[localeIndex].locale
+            : null;
+        final AppLocalizations l10n = lookupAppLocalizations(
+          chosenLocale ?? const Locale('en'),
+        );
+
         await flutterLocalNotificationsPlugin.show(
           id: newReply?.id ?? 0,
-          title: 'You have a new reply! ${Constants.happyFace}',
+          title: '${l10n.notificationNewReply} ${Constants.happyFace}',
           body: '${newReply?.by}: $text',
           notificationDetails: const NotificationDetails(
             iOS: DarwinNotificationDetails(
