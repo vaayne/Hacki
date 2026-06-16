@@ -4,6 +4,7 @@ import 'package:flutter_fadein/flutter_fadein.dart';
 import 'package:hacki/config/constants.dart';
 import 'package:hacki/cubits/cubits.dart';
 import 'package:hacki/extensions/extensions.dart';
+import 'package:hacki/l10n/app_localizations.dart';
 import 'package:hacki/models/models.dart';
 import 'package:hacki/screens/screens.dart';
 import 'package:hacki/screens/search/widgets/widgets.dart';
@@ -61,6 +62,7 @@ class _SearchScreenState extends State<SearchScreen> with ItemActionMixin {
         }
       },
       builder: (BuildContext context, SearchState state) {
+        final AppLocalizations l10n = AppLocalizations.of(context);
         return ScrollsToTop(
           child: Scaffold(
             backgroundColor: Palette.transparent,
@@ -89,7 +91,7 @@ class _SearchScreenState extends State<SearchScreen> with ItemActionMixin {
                         if (mode == LoadStatus.loading) {
                           body = const CustomCircularProgressIndicator();
                         } else if (mode == LoadStatus.failed) {
-                          body = const Text('loading failed.');
+                          body = Text(l10n.searchLoadingFailed);
                         } else {
                           body = const SizedBox.shrink();
                         }
@@ -125,8 +127,8 @@ class _SearchScreenState extends State<SearchScreen> with ItemActionMixin {
                                   context,
                                 ).colorScheme.primary,
                                 autocorrect: false,
-                                decoration: const InputDecoration(
-                                  hintText: 'Search Hacker News',
+                                decoration: InputDecoration(
+                                  hintText: l10n.searchHint,
                                 ),
                                 onChanged: (String val) {
                                   if (val.isNotEmpty) {
@@ -265,7 +267,7 @@ class _SearchScreenState extends State<SearchScreen> with ItemActionMixin {
                                                 DateTimeRangeFilter
                                               >(),
                                           selected: false,
-                                          label: '''reset''',
+                                          label: l10n.searchReset,
                                         ),
                                         const SizedBox(width: Dimens.pt8),
                                       ],
@@ -310,7 +312,7 @@ class _SearchScreenState extends State<SearchScreen> with ItemActionMixin {
                                         .read<SearchCubit>()
                                         .onSortToggled(),
                                     selected: state.params.sorted,
-                                    label: '''newest first''',
+                                    label: l10n.searchNewestFirst,
                                   ),
                                   SizedBoxes.pt8,
                                   CustomChip(
@@ -318,7 +320,7 @@ class _SearchScreenState extends State<SearchScreen> with ItemActionMixin {
                                         .read<SearchCubit>()
                                         .onExactMatchToggled(),
                                     selected: state.params.exactMatch,
-                                    label: '''exact match''',
+                                    label: l10n.searchExactMatch,
                                   ),
                                   SizedBoxes.pt8,
                                 ],
@@ -359,10 +361,10 @@ class _SearchScreenState extends State<SearchScreen> with ItemActionMixin {
                             if (state.status == SearchStatus.loaded &&
                                 state.results.isEmpty) ...<Widget>[
                               const SizedBox(height: Dimens.pt100),
-                              const Center(
+                              Center(
                                 child: Text(
-                                  'Nothing found...',
-                                  style: TextStyle(color: Palette.grey),
+                                  l10n.searchNothingFound,
+                                  style: const TextStyle(color: Palette.grey),
                                 ),
                               ),
                             ],

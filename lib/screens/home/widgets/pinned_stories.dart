@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_fadein/flutter_fadein.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hacki/cubits/cubits.dart';
+import 'package:hacki/l10n/app_localizations.dart';
 import 'package:hacki/models/models.dart';
 import 'package:hacki/screens/widgets/widgets.dart';
 import 'package:hacki/styles/styles.dart';
@@ -42,7 +43,7 @@ class PinnedStories extends StatelessWidget {
                           children: <Widget>[
                             if (preferenceState.isRichStoryTileEnabled)
                               const Icon(Icons.close, size: Dimens.pt24),
-                            const Text('Unpin'),
+                            Text(AppLocalizations.of(context).homeUnpin),
                           ],
                         ),
                       ),

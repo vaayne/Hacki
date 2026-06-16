@@ -351,5 +351,132 @@
         "type": "int"
       }
     }
-  }
+  },
+  "cancel": "Cancel",
+  "shareAsImage": "Share as image",
+  "shareFromHackerNews": "From Hacker News:",
+  "shareHackiBanner": "Shared from Hacki, an open-source Hacker News client.",
+  "shareSaveToAlbum": "Save to album",
+  "shareShare": "Share",
+  "shareShowRichStoryTile": "Show Rich Story Tile",
+  "shareShowParentStory": "Show Parent Story",
+  "shareShowHackiBanner": "Show Shared from Hacki Banner",
+  "shareCopyLinkOnSharing": "Copy Link to HN on Sharing",
+  "shareTextScaling": "Text Scaling",
+  "shareImageSaved": "Image saved.",
+  "shareImageSaveFailed": "Failed to save image.",
+  "shareTipsTitle": "Tips",
+  "shareTipsContent": "You can select text in the comment before tapping on Share button and the text will be highlighted in resulted screenshot.",
+  "shareTipsDismiss": "Dismiss",
+  "shareTipsInteresting": "Interesting",
+  "submitPostSubmitted": "Post submitted.",
+  "submitQuitEditing": "Quit editing?",
+  "submitYes": "Yes",
+  "submitTitle": "Submit",
+  "submitConfirm": "Submit?",
+  "submitTitleHint": "Title",
+  "submitUrlHint": "Url",
+  "submitOr": "or",
+  "submitTextHint": "Text",
+  "searchPostedBy": "posted by {author}",
+  "@searchPostedBy": {
+    "placeholders": {
+      "author": {
+        "type": "String"
+      }
+    }
+  },
+  "searchUsernameHint": "Username",
+  "searchClear": "Clear",
+  "searchConfirm": "Confirm",
+  "searchPoints": "points",
+  "searchPointsValue": "{operator} {points} points",
+  "@searchPointsValue": {
+    "placeholders": {
+      "operator": {
+        "type": "String"
+      },
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "searchPointsHint": "Points",
+  "searchRemove": "Remove",
+  "searchNumComments": "num_cmt",
+  "searchNumCommentsValue": "{operator} {commentsNumber} comments",
+  "@searchNumCommentsValue": {
+    "placeholders": {
+      "operator": {
+        "type": "String"
+      },
+      "commentsNumber": {
+        "type": "int"
+      }
+    }
+  },
+  "searchNumCommentsHint": "Number of comments",
+  "searchLoadingFailed": "loading failed.",
+  "searchHint": "Search Hacker News",
+  "searchReset": "reset",
+  "searchNewestFirst": "newest first",
+  "searchExactMatch": "exact match",
+  "searchNothingFound": "Nothing found...",
+  "homeTourTitle": "Welcome to Hacki!",
+  "homeTourContent": "Take a quick tour to see what Hacki can do?",
+  "commonNo": "No",
+  "commonYes": "Yes",
+  "homeTapStoryToViewComments": "Tap on story tile to view its comments.",
+  "homeUnpin": "Unpin",
+  "profileMarkAllAsRead": "Mark all as read",
+  "commonLoadingFailed": "loading failed.",
+  "profileInboxCommentMeta": "{timeAgo} from {by}:",
+  "@profileInboxCommentMeta": {
+    "placeholders": {
+      "timeAgo": {
+        "type": "String"
+      },
+      "by": {
+        "type": "String"
+      }
+    }
+  },
+  "profileSyncCompleted": "Sync completed.",
+  "profileSyncFromHackerNews": "Sync from Hacker News",
+  "profileStory": "Story",
+  "profileComment": "Comment",
+  "profileFavoritesEmpty": "Your favorite stories will show up here.\nThey will be synced to your Hacker News account if you are logged in.",
+  "profileNoFavoriteStory": "No favorite story.",
+  "profileNoFavoriteComment": "No favorite comment.",
+  "commonOfflineMode": "You are currently in offline mode. ",
+  "commonOfflineModeWithExit": "You are currently in offline mode. Exit to fetch latest stories.",
+  "commonExitOfflineMode": "Exit offline mode?",
+  "commonCancel": "Cancel",
+  "commonExit": "Exit",
+  "commonLoadPage": "Load Page {page}",
+  "@commonLoadPage": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      }
+    }
+  },
+  "commonPin": "Pin",
+  "commonMore": "More",
+  "commonReadStoryMarkingDisabled": "Read story marking is disabled.",
+  "commonItemMeta": "{timeAgo} by {by}",
+  "@commonItemMeta": {
+    "placeholders": {
+      "timeAgo": {
+        "type": "String"
+      },
+      "by": {
+        "type": "String"
+      }
+    }
+  },
+  "commonDeleted": "deleted",
+  "commonFetchingData": "Fetching data...",
+  "commonLinkPreviewError": "Oops! Unable to parse the url. We have sent feedback to our developers & we will try to fix this in our next release. Thanks!",
+  "commonNoCommentYet": "no comment yet."
 }

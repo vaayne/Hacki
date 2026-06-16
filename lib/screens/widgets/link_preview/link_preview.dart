@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_fadein/flutter_fadein.dart';
 import 'package:hacki/config/constants.dart';
 import 'package:hacki/extensions/extensions.dart';
+import 'package:hacki/l10n/app_localizations.dart';
 import 'package:hacki/models/models.dart';
 import 'package:hacki/screens/widgets/link_preview/image_wrapped_text.dart';
 import 'package:hacki/screens/widgets/link_preview/link_view.dart';
@@ -123,11 +124,7 @@ class _LinkPreviewState extends State<LinkPreview> {
   @override
   void initState() {
     _errorTitle = widget.errorTitle ?? Constants.errorMessage;
-    _errorBody =
-        widget.errorBody ??
-        'Oops! Unable to parse the url. We have '
-            'sent feedback to our developers & '
-            'we will try to fix this in our next release. Thanks!';
+    _errorBody = widget.errorBody;
 
     _loading = true;
     _getInfo();
@@ -232,7 +229,8 @@ class _LinkPreviewState extends State<LinkPreview> {
         url: widget.link,
         readableUrl: widget.story.readableUrl,
         title: widget.story.title,
-        description: desc ?? title ?? 'no comment yet.',
+        description:
+            desc ?? title ?? AppLocalizations.of(context).commonNoCommentYet,
         imageUri: imageUri,
         iconUri: iconUri,
         imagePath: Constants.hackerNewsLogoPath,
@@ -252,6 +250,8 @@ class _LinkPreviewState extends State<LinkPreview> {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context);
+    final String errorBody = _errorBody ?? l10n.commonLinkPreviewError;
     final Widget loadingWidget =
         widget.placeholderWidget ??
         Container(
@@ -264,7 +264,7 @@ class _LinkPreviewState extends State<LinkPreview> {
             color: Palette.grey[200],
           ),
           alignment: Alignment.center,
-          child: const Text('Fetching data...'),
+          child: Text(l10n.commonFetchingData),
         );
 
     Widget loadedWidget;
@@ -274,7 +274,7 @@ class _LinkPreviewState extends State<LinkPreview> {
         ? _buildLinkContainer(
             context.storyTileHeight,
             title: _errorTitle,
-            desc: _errorBody,
+            desc: errorBody,
             imageUri: null,
             iconUri: null,
           )
@@ -283,7 +283,7 @@ class _LinkPreviewState extends State<LinkPreview> {
             title: _errorTitle,
             desc: WebAnalyzer.isNotEmpty(info!.description)
                 ? info.description
-                : _errorBody,
+                : errorBody,
             imageUri: widget.shouldShowMultimedia ? info.image : null,
             iconUri: widget.shouldShowMultimedia ? info.icon : null,
           );

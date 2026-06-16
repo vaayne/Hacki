@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hacki/l10n/app_localizations.dart';
 import 'package:hacki/models/models.dart' show NumericCondition, PointsFilter;
 import 'package:hacki/screens/widgets/widgets.dart';
 import 'package:hacki/styles/styles.dart';
@@ -18,6 +19,7 @@ class PointsFilterChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context);
     return CustomChip(
       onSelected: (_) async {
         final PointsFilter? filter = await onChipTapped(context);
@@ -25,8 +27,8 @@ class PointsFilterChip extends StatelessWidget {
       },
       selected: filter != null,
       label: filter == null
-          ? 'points'
-          : '${filter!.condition.operator} ${filter!.points} points',
+          ? l10n.searchPoints
+          : l10n.searchPointsValue(filter!.condition.operator, filter!.points),
     );
   }
 
@@ -68,6 +70,7 @@ class _PointsDialogState extends State<_PointsDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context);
     return SimpleDialog(
       children: <Widget>[
         Padding(
@@ -98,7 +101,7 @@ class _PointsDialogState extends State<_PointsDialog> {
             cursorColor: Theme.of(context).colorScheme.primary,
             keyboardType: TextInputType.number,
             autocorrect: false,
-            decoration: const InputDecoration(hintText: 'Points'),
+            decoration: InputDecoration(hintText: l10n.searchPointsHint),
             inputFormatters: <TextInputFormatter>[
               FilteringTextInputFormatter.digitsOnly,
             ],
@@ -112,11 +115,11 @@ class _PointsDialogState extends State<_PointsDialog> {
             children: <Widget>[
               TextButton(
                 onPressed: () => context.pop(widget.filter),
-                child: const Text('Cancel'),
+                child: Text(l10n.cancel),
               ),
               TextButton(
                 onPressed: () => context.pop(),
-                child: const Text('Remove'),
+                child: Text(l10n.searchRemove),
               ),
               ElevatedButton(
                 onPressed: () {
@@ -130,7 +133,7 @@ class _PointsDialogState extends State<_PointsDialog> {
                   );
                   context.pop(filter);
                 },
-                child: const Text('Confirm'),
+                child: Text(l10n.searchConfirm),
               ),
             ],
           ),

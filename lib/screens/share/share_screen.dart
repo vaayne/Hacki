@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hacki/config/constants.dart';
 import 'package:hacki/cubits/cubits.dart';
 import 'package:hacki/extensions/context_extension.dart';
+import 'package:hacki/l10n/app_localizations.dart';
 import 'package:hacki/models/models.dart';
 import 'package:hacki/screens/widgets/widgets.dart';
 import 'package:hacki/styles/styles.dart';
@@ -51,6 +52,7 @@ class _ShareScreenState extends State<ShareScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context);
     final Item item = widget.args.item;
     final Item? parent = widget.args.parent;
     final bool isPreviewImageLeftAligned = context
@@ -98,7 +100,7 @@ class _ShareScreenState extends State<ShareScreen> {
           );
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Share as image'),
+        title: Text(l10n.shareAsImage),
         actions: const <Widget>[ShareScreenTips()],
       ),
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -132,7 +134,7 @@ class _ShareScreenState extends State<ShareScreen> {
                                 ),
                                 SizedBoxes.pt8,
                                 Text(
-                                  'From Hacker News:',
+                                  l10n.shareFromHackerNews,
                                   style: TextStyle(
                                     fontSize: TextDimens.pt16,
                                     color: Theme.of(
@@ -157,7 +159,7 @@ class _ShareScreenState extends State<ShareScreen> {
                               const Divider(height: Dimens.zero),
                               SizedBoxes.pt6,
                               Text(
-                                '''Shared from Hacki, an open-source Hacker News client.''',
+                                l10n.shareHackiBanner,
                                 style: TextStyle(
                                   fontSize: TextDimens.pt10,
                                   color: Theme.of(
@@ -183,13 +185,13 @@ class _ShareScreenState extends State<ShareScreen> {
                     ElevatedButton.icon(
                       onPressed: _save,
                       icon: const Icon(Icons.save),
-                      label: const Text('Save to album'),
+                      label: Text(l10n.shareSaveToAlbum),
                     ),
                     SizedBoxes.pt24,
                     ElevatedButton.icon(
                       onPressed: _share,
                       icon: const Icon(Icons.share),
-                      label: const Text('Share'),
+                      label: Text(l10n.shareShare),
                     ),
                   ],
                 ),
@@ -197,7 +199,7 @@ class _ShareScreenState extends State<ShareScreen> {
                 if (item is Story)
                   SwitchListTile(
                     value: _shouldUseRichStoryTile,
-                    title: const Text('Show Rich Story Tile'),
+                    title: Text(l10n.shareShowRichStoryTile),
                     onChanged: (_) {
                       setState(() {
                         _shouldUseRichStoryTile = !_shouldUseRichStoryTile;
@@ -207,7 +209,7 @@ class _ShareScreenState extends State<ShareScreen> {
                 if (item is Comment && parent != null && parent is Story)
                   SwitchListTile(
                     value: _shouldShowParent,
-                    title: const Text('Show Parent Story'),
+                    title: Text(l10n.shareShowParentStory),
                     onChanged: (_) {
                       setState(() {
                         _shouldShowParent = !_shouldShowParent;
@@ -216,7 +218,7 @@ class _ShareScreenState extends State<ShareScreen> {
                   ),
                 SwitchListTile(
                   value: _shouldShowHackiBanner,
-                  title: const Text('Show Shared from Hacki Banner'),
+                  title: Text(l10n.shareShowHackiBanner),
                   onChanged: (_) {
                     setState(() {
                       _shouldShowHackiBanner = !_shouldShowHackiBanner;
@@ -225,7 +227,7 @@ class _ShareScreenState extends State<ShareScreen> {
                 ),
                 SwitchListTile(
                   value: _shouldCopyHnLink,
-                  title: const Text('Copy Link to HN on Sharing'),
+                  title: Text(l10n.shareCopyLinkOnSharing),
                   onChanged: (_) {
                     setState(() {
                       _shouldCopyHnLink = !_shouldCopyHnLink;
@@ -234,7 +236,7 @@ class _ShareScreenState extends State<ShareScreen> {
                 ),
                 SwitchListTile(
                   value: _shouldScaleText,
-                  title: const Text('Text Scaling'),
+                  title: Text(l10n.shareTextScaling),
                   onChanged: (_) {
                     setState(() {
                       _shouldScaleText = !_shouldScaleText;
@@ -252,6 +254,7 @@ class _ShareScreenState extends State<ShareScreen> {
   }
 
   Future<void> _save() async {
+    final AppLocalizations l10n = AppLocalizations.of(context);
     final Uint8List? imageBytes = await _screenshotController.capture(
       pixelRatio: _screenshotPixelRatio,
     );
@@ -265,9 +268,9 @@ class _ShareScreenState extends State<ShareScreen> {
     if (mounted) {
       HapticFeedbackUtils.light();
       if (result) {
-        context.showSnackBar(content: 'Image saved.');
+        context.showSnackBar(content: l10n.shareImageSaved);
       } else {
-        context.showErrorSnackBar('Failed to save image.');
+        context.showErrorSnackBar(l10n.shareImageSaveFailed);
       }
     }
   }

@@ -5,6 +5,7 @@ import 'package:flutter_fadein/flutter_fadein.dart';
 import 'package:hacki/blocs/blocs.dart';
 import 'package:hacki/cubits/cubits.dart';
 import 'package:hacki/extensions/context_extension.dart';
+import 'package:hacki/l10n/app_localizations.dart';
 import 'package:hacki/models/models.dart';
 import 'package:hacki/screens/widgets/widgets.dart';
 import 'package:hacki/styles/styles.dart';
@@ -132,7 +133,9 @@ class ItemsListView<T extends Item> extends StatelessWidget {
                                 children: <Widget>[
                                   Text(
                                     shouldShowAuthor
-                                        ? '''${e.timeAgo} by ${e.by}'''
+                                        ? AppLocalizations.of(
+                                            context,
+                                          ).commonItemMeta(e.timeAgo, e.by)
                                         : e.timeAgo,
                                     style: TextStyle(
                                       color: Theme.of(context).metadataColor,
@@ -204,12 +207,14 @@ class ItemsListView<T extends Item> extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             if (e.deleted)
-                              const Center(
+                              Center(
                                 child: Padding(
-                                  padding: EdgeInsets.only(top: Dimens.pt6),
+                                  padding: const EdgeInsets.only(
+                                    top: Dimens.pt6,
+                                  ),
                                   child: Text(
-                                    'deleted',
-                                    style: TextStyle(color: Palette.grey),
+                                    AppLocalizations.of(context).commonDeleted,
+                                    style: const TextStyle(color: Palette.grey),
                                   ),
                                 ),
                               ),
@@ -221,7 +226,9 @@ class ItemsListView<T extends Item> extends StatelessWidget {
                                   children: <Widget>[
                                     Text(
                                       shouldShowAuthor
-                                          ? '''${e.timeAgo} by ${e.by}'''
+                                          ? AppLocalizations.of(
+                                              context,
+                                            ).commonItemMeta(e.timeAgo, e.by)
                                           : e.timeAgo,
                                       style: TextStyle(
                                         color: Theme.of(context).metadataColor,
@@ -283,7 +290,7 @@ class ItemsListView<T extends Item> extends StatelessWidget {
           if (mode == LoadStatus.loading) {
             body = const CustomCircularProgressIndicator();
           } else if (mode == LoadStatus.failed) {
-            body = const Text('loading failed.');
+            body = Text(AppLocalizations.of(context).commonLoadingFailed);
           } else {
             body = const SizedBox.shrink();
           }

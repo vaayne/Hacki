@@ -12,6 +12,7 @@ import 'package:hacki/config/locator.dart';
 import 'package:hacki/config/paths.dart';
 import 'package:hacki/cubits/cubits.dart';
 import 'package:hacki/extensions/extensions.dart';
+import 'package:hacki/l10n/app_localizations.dart';
 import 'package:hacki/main.dart';
 import 'package:hacki/models/models.dart';
 import 'package:hacki/repositories/repositories.dart';
@@ -193,6 +194,7 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Future<void> showFeatureDiscoveryDialog() async {
+    final AppLocalizations l10n = AppLocalizations.of(context);
     final PreferenceRepository repo = locator.get<PreferenceRepository>();
     final bool hasSeen = await repo.hasSeenTour ?? false;
     if (!hasSeen) {
@@ -207,14 +209,14 @@ class _HomeScreenState extends State<HomeScreen>
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) => AlertDialog(
-          title: const Text('Welcome to Hacki!'),
-          content: const Text('Take a quick tour to see what Hacki can do?'),
+          title: Text(l10n.homeTourTitle),
+          content: Text(l10n.homeTourContent),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 context.pop();
               },
-              child: const Text('No'),
+              child: Text(l10n.commonNo),
             ),
             TextButton(
               onPressed: () {
@@ -229,7 +231,7 @@ class _HomeScreenState extends State<HomeScreen>
                   DiscoverableFeature.jumpDownButton.featureId,
                 });
               },
-              child: const Text('Yes'),
+              child: Text(l10n.commonYes),
             ),
           ],
         ),

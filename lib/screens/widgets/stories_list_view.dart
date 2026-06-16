@@ -5,6 +5,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hacki/blocs/blocs.dart';
 import 'package:hacki/cubits/cubits.dart';
 import 'package:hacki/extensions/extensions.dart';
+import 'package:hacki/l10n/app_localizations.dart';
 import 'package:hacki/models/models.dart';
 import 'package:hacki/screens/widgets/widgets.dart';
 import 'package:hacki/styles/styles.dart';
@@ -161,7 +162,10 @@ class _StoriesListViewState extends State<StoriesListView>
                             ),
                           ),
                           child: Text(
-                            '''Load Page ${(state.currentPageByType[widget.storyType] ?? 0) + 1}''',
+                            AppLocalizations.of(context).commonLoadPage(
+                              (state.currentPageByType[widget.storyType] ?? 0) +
+                                  1,
+                            ),
                           ),
                         ),
                       ),
@@ -201,7 +205,7 @@ class _StoriesListViewState extends State<StoriesListView>
                                 size: Dimens.pt24,
                               ),
                             if (!preferenceState.isRichStoryTileEnabled)
-                              const Text('Pin'),
+                              Text(AppLocalizations.of(context).commonPin),
                           ],
                         ),
                       ),
@@ -219,7 +223,7 @@ class _StoriesListViewState extends State<StoriesListView>
                             if (preferenceState.isRichStoryTileEnabled)
                               const Icon(Icons.more_horiz, size: Dimens.pt24),
                             if (!preferenceState.isRichStoryTileEnabled)
-                              const Text('More'),
+                              Text(AppLocalizations.of(context).commonMore),
                           ],
                         ),
                       ),
@@ -316,7 +320,9 @@ class _StoriesListViewState extends State<StoriesListView>
         storiesBloc.add(StoryRead(story: story));
       }
     } else {
-      context.showSnackBar(content: 'Read story marking is disabled.');
+      context.showSnackBar(
+        content: AppLocalizations.of(context).commonReadStoryMarkingDisabled,
+      );
     }
   }
 

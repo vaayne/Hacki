@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hacki/l10n/app_localizations.dart';
 import 'package:hacki/models/models.dart'
     show CommentsNumberFilter, NumericCondition;
 import 'package:hacki/screens/widgets/widgets.dart';
@@ -19,6 +20,7 @@ class NumberOfCommentsFilterChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context);
     return CustomChip(
       onSelected: (_) async {
         final CommentsNumberFilter? filter = await onChipTapped(context);
@@ -26,8 +28,11 @@ class NumberOfCommentsFilterChip extends StatelessWidget {
       },
       selected: filter != null,
       label: filter == null
-          ? 'num_cmt'
-          : '${filter!.condition.operator} ${filter!.commentsNumber} comments',
+          ? l10n.searchNumComments
+          : l10n.searchNumCommentsValue(
+              filter!.condition.operator,
+              filter!.commentsNumber,
+            ),
     );
   }
 
@@ -71,6 +76,7 @@ class _NumberOfCommentsDialogState extends State<_NumberOfCommentsDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context);
     return SimpleDialog(
       children: <Widget>[
         Padding(
@@ -101,7 +107,7 @@ class _NumberOfCommentsDialogState extends State<_NumberOfCommentsDialog> {
             cursorColor: Theme.of(context).colorScheme.primary,
             keyboardType: TextInputType.number,
             autocorrect: false,
-            decoration: const InputDecoration(hintText: 'Number of comments'),
+            decoration: InputDecoration(hintText: l10n.searchNumCommentsHint),
             inputFormatters: <TextInputFormatter>[
               FilteringTextInputFormatter.digitsOnly,
             ],
@@ -115,11 +121,11 @@ class _NumberOfCommentsDialogState extends State<_NumberOfCommentsDialog> {
             children: <Widget>[
               TextButton(
                 onPressed: () => context.pop(widget.filter),
-                child: const Text('Cancel'),
+                child: Text(l10n.cancel),
               ),
               TextButton(
                 onPressed: () => context.pop(),
-                child: const Text('Remove'),
+                child: Text(l10n.searchRemove),
               ),
               SizedBoxes.pt6,
               ElevatedButton(
@@ -134,7 +140,7 @@ class _NumberOfCommentsDialogState extends State<_NumberOfCommentsDialog> {
                   );
                   context.pop(filter);
                 },
-                child: const Text('Confirm'),
+                child: Text(l10n.searchConfirm),
               ),
             ],
           ),

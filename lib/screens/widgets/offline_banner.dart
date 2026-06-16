@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hacki/blocs/blocs.dart';
 import 'package:hacki/cubits/cubits.dart';
+import 'package:hacki/l10n/app_localizations.dart';
 import 'package:hacki/services/services.dart';
 import 'package:hacki/styles/styles.dart';
 
@@ -17,12 +18,14 @@ class OfflineBanner extends StatelessWidget {
       buildWhen: (StoriesState previous, StoriesState current) =>
           previous.isOfflineReading != current.isOfflineReading,
       builder: (BuildContext context, StoriesState state) {
+        final AppLocalizations l10n = AppLocalizations.of(context);
         if (state.isOfflineReading) {
           return MaterialBanner(
             dividerColor: Palette.transparent,
             content: Text(
-              'You are currently in offline mode. '
-              '${shouldShowExitButton ? 'Exit to fetch latest stories.' : ''}',
+              shouldShowExitButton
+                  ? l10n.commonOfflineModeWithExit
+                  : l10n.commonOfflineMode,
               textAlign: shouldShowExitButton
                   ? TextAlign.left
                   : TextAlign.center,
@@ -39,17 +42,17 @@ class OfflineBanner extends StatelessWidget {
                       barrierDismissible: false,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: const Text('Exit offline mode?'),
+                          title: Text(l10n.commonExitOfflineMode),
                           actions: <Widget>[
                             TextButton(
                               onPressed: () => context.pop(false),
-                              child: const Text('Cancel'),
+                              child: Text(l10n.commonCancel),
                             ),
                             TextButton(
                               onPressed: () => context.pop(true),
-                              child: const Text(
-                                'Yes',
-                                style: TextStyle(color: Palette.red),
+                              child: Text(
+                                l10n.commonYes,
+                                style: const TextStyle(color: Palette.red),
                               ),
                             ),
                           ],
@@ -66,7 +69,7 @@ class OfflineBanner extends StatelessWidget {
                       }
                     });
                   },
-                  child: const Text('Exit'),
+                  child: Text(l10n.commonExit),
                 )
               else
                 Container(),
