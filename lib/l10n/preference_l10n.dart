@@ -67,6 +67,8 @@ String localizedPreferenceTitle(BuildContext context, Preference<dynamic> p) {
       return l10n.prefHapticFeedbackTitle;
     case 'devMode':
       return l10n.prefDevModeTitle;
+    case 'translationEnabled':
+      return l10n.prefTranslationTitle;
     case 'storyMarkingMode':
       return l10n.prefStoryMarkingModeTitle;
     case 'appColor':
@@ -136,6 +138,8 @@ String localizedPreferenceSubtitle(
       return l10n.prefWebViewBottomSheetSubtitle;
     case 'trueDarkMode':
       return l10n.prefTrueDarkModeSubtitle;
+    case 'translationEnabled':
+      return l10n.prefTranslationSubtitle;
     default:
       return p.subtitle;
   }
@@ -149,6 +153,8 @@ String localizedDividerLabel(BuildContext context, DividerPlaceholder p) {
       return l10n.prefDividerThread;
     case 'Look And Feel':
       return l10n.prefDividerLookAndFeel;
+    case 'Translation':
+      return l10n.prefDividerTranslation;
     default:
       return p.label;
   }

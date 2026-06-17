@@ -39,6 +39,7 @@ class SembastRepository with Loggable {
   static const String _commentsKey = 'comments';
   static const String _idsOfCommentsRepliedToMeKey = 'idsOfCommentsRepliedToMe';
   static const String _metadataCacheKey = 'metadata';
+  static const String _translationsKey = 'translations';
 
   Future<Database> initializeDatabase() async {
     final Directory dir = await getApplicationCacheDirectory();
@@ -278,6 +279,31 @@ class SembastRepository with Loggable {
     } else {
       return null;
     }
+  }
+
+  //#endregion
+
+  //#region translation cache
+
+  /// Persists [translation] under [key] (typically `<language>:<itemId>`) so a
+  /// previously translated comment survives app restarts.
+  Future<void> cacheTranslation({
+    required String key,
+    required String translation,
+  }) async {
+    final Database db = _database ?? await initializeDatabase();
+    final StoreRef<String, String> store = StoreRef<String, String>(
+      _translationsKey,
+    );
+    await store.record(key).put(db, translation);
+  }
+
+  Future<String?> getCachedTranslation({required String key}) async {
+    final Database db = _database ?? await initializeDatabase();
+    final StoreRef<String, String> store = StoreRef<String, String>(
+      _translationsKey,
+    );
+    return store.record(key).get(db);
   }
 
   //#endregion

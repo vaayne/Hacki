@@ -12,3 +12,4 @@ export 'poll_view.dart';
 export 'reply_box.dart';
 export 'settings_button.dart';
 export 'time_machine_dialog.dart';
+export 'translation_toggle_button.dart';

@@ -358,5 +358,16 @@
   "featureJumpDownDesc": "点击此按钮可跳转到下一条根层级评论。\n\n长按它可跳转到此主题的末尾。",
   "featureSearchInThreadTitle": "在主题中搜索",
   "featureSearchInThreadDesc": "在此主题中搜索评论。",
-  "notificationNewReply": "你有一条新回复！"
+  "notificationNewReply": "你有一条新回复！",
+  "prefTranslationTitle": "翻译",
+  "prefTranslationSubtitle": "为评论和故事显示内联翻译。",
+  "prefDividerTranslation": "翻译",
+  "settingsTranslationApiKey": "API 密钥",
+  "settingsTranslationApiKeyHint": "sk-...",
+  "settingsTranslationBaseUrl": "Base URL",
+  "settingsTranslationModel": "模型",
+  "settingsTranslationBatchSize": "批量大小",
+  "translationTranslating": "翻译中…",
+  "translationRetry": "翻译失败，点击重试。",
+  "translationApiKeyMissing": "请在设置中填写翻译 API 密钥。"
 }
