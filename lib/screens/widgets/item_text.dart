@@ -169,29 +169,23 @@ class _TranslationSection extends StatelessWidget {
 
     return BlocBuilder<TranslationCubit, TranslationState>(
       buildWhen: (TranslationState p, TranslationState c) =>
-          p.of(item.id) != c.of(item.id),
+          p.active != c.active || p.of(item.id) != c.of(item.id),
       builder: (BuildContext context, TranslationState state) {
+        if (!state.active) return const SizedBox.shrink();
+
         final ItemTranslation translation = state.of(item.id);
         switch (translation.status) {
+          case TranslationStatus.idle:
+            // Translate as the item scrolls into view while the toggle is on.
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              final TranslationState s = cubit.state;
+              if (s.active && s.of(item.id).status == TranslationStatus.idle) {
+                translate();
+              }
+            });
+            return _progress(context, l10n);
           case TranslationStatus.inProgress:
-            return Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: Dimens.pt8),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    const SizedBox(
-                      width: Dimens.pt12,
-                      height: Dimens.pt12,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    ),
-                    SizedBoxes.pt8,
-                    Text(l10n.translationTranslating, style: style),
-                  ],
-                ),
-              ),
-            );
+            return _progress(context, l10n);
           case TranslationStatus.success:
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -204,11 +198,6 @@ class _TranslationSection extends StatelessWidget {
                   linkStyle: linkStyle,
                   onOpen: (LinkableElement link) =>
                       LinkUtils.launch(link.url, context),
-                ),
-                _TranslationButton(
-                  icon: Icons.translate,
-                  label: l10n.translationShowOriginal,
-                  onPressed: () => cubit.hide(item.id),
                 ),
               ],
             );
@@ -224,14 +213,29 @@ class _TranslationSection extends StatelessWidget {
               label: l10n.translationRetry,
               onPressed: translate,
             );
-          case TranslationStatus.idle:
-            return _TranslationButton(
-              icon: Icons.translate,
-              label: l10n.translationTranslate,
-              onPressed: translate,
-            );
         }
       },
+    );
+  }
+
+  Widget _progress(BuildContext context, AppLocalizations l10n) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: Dimens.pt8),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            const SizedBox(
+              width: Dimens.pt12,
+              height: Dimens.pt12,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
+            SizedBoxes.pt8,
+            Text(l10n.translationTranslating, style: style),
+          ],
+        ),
+      ),
     );
   }
 }

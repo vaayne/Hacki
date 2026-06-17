@@ -366,9 +366,7 @@
   "settingsTranslationApiKeyHint": "sk-...",
   "settingsTranslationBaseUrl": "Base URL",
   "settingsTranslationModel": "模型",
-  "translationTranslate": "翻译",
   "translationTranslating": "翻译中…",
-  "translationShowOriginal": "隐藏翻译",
   "translationRetry": "翻译失败，点击重试。",
   "translationApiKeyMissing": "请在设置中填写翻译 API 密钥。"
 }

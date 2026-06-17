@@ -33,13 +33,15 @@ class TranslationCubit extends Cubit<TranslationState> with Loggable {
   }) async {
     if (state.of(id).status == TranslationStatus.inProgress) return;
 
+    // Mark in-progress synchronously so concurrent rebuilds don't re-trigger
+    // the request during the awaits below.
+    emit(state.updated(id, TranslationStatus.inProgress));
+
     final String? apiKey = await _preferenceRepository.translationApiKey;
     if (apiKey == null || apiKey.isEmpty) {
       emit(state.updated(id, TranslationStatus.missingApiKey));
       return;
     }
-
-    emit(state.updated(id, TranslationStatus.inProgress));
 
     try {
       final String result = await _translationRepository.translate(
@@ -56,8 +58,9 @@ class TranslationCubit extends Cubit<TranslationState> with Loggable {
     }
   }
 
-  /// Removes the translation of [id], collapsing back to the original text.
-  void hide(int id) => emit(state.removed(id));
+  /// Toggles translation display for the current thread. Cached translations
+  /// are kept so flipping it back on is instant.
+  void toggle() => emit(state.copyWith(active: !state.active));
 
   @override
   String get logIdentifier => 'TranslationCubit';

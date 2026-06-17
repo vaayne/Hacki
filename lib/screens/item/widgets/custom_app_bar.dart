@@ -47,6 +47,7 @@ class CustomAppBar extends AppBar {
                return const ItemScreenTips();
              },
            ),
+           const TranslationToggleButton(),
            const InThreadSearchIconButton(),
            IconButton(
              key: fontSizeIconButtonKey,

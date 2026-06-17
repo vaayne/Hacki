@@ -585,9 +585,7 @@
   "settingsTranslationApiKeyHint": "sk-...",
   "settingsTranslationBaseUrl": "Base URL",
   "settingsTranslationModel": "Model",
-  "translationTranslate": "Translate",
   "translationTranslating": "Translating…",
-  "translationShowOriginal": "Hide translation",
   "translationRetry": "Translation failed. Tap to retry.",
   "translationApiKeyMissing": "Set your translation API key in Settings."
 }
