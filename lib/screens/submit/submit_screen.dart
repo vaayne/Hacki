@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hacki/cubits/cubits.dart';
 import 'package:hacki/extensions/extensions.dart';
+import 'package:hacki/l10n/app_localizations.dart';
 import 'package:hacki/models/models.dart';
 import 'package:hacki/styles/styles.dart';
 import 'package:hacki/utils/utils.dart';
@@ -35,15 +36,17 @@ class _SubmitScreenState extends State<SubmitScreen> with ItemActionMixin {
       listenWhen: (SubmitState previous, SubmitState current) =>
           previous.status != current.status,
       listener: (BuildContext context, SubmitState state) {
+        final AppLocalizations l10n = AppLocalizations.of(context);
         if (state.status == Status.success) {
           context.pop();
           HapticFeedbackUtils.light();
-          showSnackBar(content: 'Post submitted.');
+          showSnackBar(content: l10n.submitPostSubmitted);
         } else if (state.status == Status.failure) {
           showErrorSnackBar();
         }
       },
       builder: (BuildContext context, SubmitState state) {
+        final AppLocalizations l10n = AppLocalizations.of(context);
         return Scaffold(
           appBar: AppBar(
             backgroundColor: Theme.of(context).canvasColor,
@@ -67,17 +70,17 @@ class _SubmitScreenState extends State<SubmitScreen> with ItemActionMixin {
                   barrierDismissible: false,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      title: const Text('Quit editing?'),
+                      title: Text(l10n.submitQuitEditing),
                       actions: <Widget>[
                         TextButton(
                           onPressed: () => context.pop(false),
-                          child: const Text('Cancel'),
+                          child: Text(l10n.cancel),
                         ),
                         TextButton(
                           onPressed: () => context.pop(true),
-                          child: const Text(
-                            'Yes',
-                            style: TextStyle(color: Palette.red),
+                          child: Text(
+                            l10n.submitYes,
+                            style: const TextStyle(color: Palette.red),
                           ),
                         ),
                       ],
@@ -91,7 +94,7 @@ class _SubmitScreenState extends State<SubmitScreen> with ItemActionMixin {
               },
             ),
             title: Text(
-              'Submit',
+              l10n.submitTitle,
               style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
             ),
             actions: <Widget>[
@@ -122,17 +125,17 @@ class _SubmitScreenState extends State<SubmitScreen> with ItemActionMixin {
                       barrierDismissible: false,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: const Text('Submit?'),
+                          title: Text(l10n.submitConfirm),
                           actions: <Widget>[
                             TextButton(
                               onPressed: () => context.pop(false),
-                              child: const Text('Cancel'),
+                              child: Text(l10n.cancel),
                             ),
                             TextButton(
                               onPressed: () => context.pop(true),
-                              child: const Text(
-                                'Yes',
-                                style: TextStyle(color: Palette.red),
+                              child: Text(
+                                l10n.submitYes,
+                                style: const TextStyle(color: Palette.red),
                               ),
                             ),
                           ],
@@ -161,7 +164,7 @@ class _SubmitScreenState extends State<SubmitScreen> with ItemActionMixin {
                   cursorColor: Theme.of(context).colorScheme.primary,
                   autocorrect: false,
                   maxLength: 80,
-                  decoration: const InputDecoration(hintText: 'Title'),
+                  decoration: InputDecoration(hintText: l10n.submitTitleHint),
                   onChanged: context.read<SubmitCubit>().onTitleChanged,
                 ),
               ),
@@ -172,13 +175,13 @@ class _SubmitScreenState extends State<SubmitScreen> with ItemActionMixin {
                   controller: urlEditingController,
                   cursorColor: Theme.of(context).colorScheme.primary,
                   autocorrect: false,
-                  decoration: const InputDecoration(hintText: 'Url'),
+                  decoration: InputDecoration(hintText: l10n.submitUrlHint),
                   onChanged: context.read<SubmitCubit>().onUrlChanged,
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: Dimens.pt12),
-                child: Center(child: Text('or')),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: Dimens.pt12),
+                child: Center(child: Text(l10n.submitOr)),
               ),
               Expanded(
                 child: Padding(
@@ -188,12 +191,14 @@ class _SubmitScreenState extends State<SubmitScreen> with ItemActionMixin {
                     controller: textEditingController,
                     cursorColor: Theme.of(context).colorScheme.primary,
                     maxLines: 200,
-                    decoration: const InputDecoration(
-                      hintText: 'Text',
-                      focusedBorder: UnderlineInputBorder(
+                    decoration: InputDecoration(
+                      hintText: l10n.submitTextHint,
+                      focusedBorder: const UnderlineInputBorder(
                         borderSide: BorderSide.none,
                       ),
-                      border: UnderlineInputBorder(borderSide: BorderSide.none),
+                      border: const UnderlineInputBorder(
+                        borderSide: BorderSide.none,
+                      ),
                     ),
                     onChanged: context.read<SubmitCubit>().onTextChanged,
                     textCapitalization: TextCapitalization.sentences,

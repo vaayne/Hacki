@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hacki/blocs/blocs.dart';
 import 'package:hacki/config/constants.dart';
 import 'package:hacki/extensions/extensions.dart';
+import 'package:hacki/l10n/app_localizations.dart';
 import 'package:hacki/models/status.dart';
 import 'package:hacki/screens/widgets/widgets.dart';
 import 'package:hacki/styles/styles.dart';
@@ -27,11 +28,14 @@ class _LoginDialogState extends State<LoginDialog> with ItemActionMixin {
         if (state.isLoggedIn) {
           context.pop();
           showSnackBar(
-            content: 'Logged in successfully! ${Constants.happyFace}',
+            content: AppLocalizations.of(
+              context,
+            ).itemLoggedInSuccessfully(Constants.happyFace),
           );
         }
       },
       builder: (BuildContext context, AuthState state) {
+        final AppLocalizations l10n = AppLocalizations.of(context);
         return SimpleDialog(
           children: <Widget>[
             if (state.status.isLoading)
@@ -52,7 +56,7 @@ class _LoginDialogState extends State<LoginDialog> with ItemActionMixin {
                   cursorColor: Theme.of(context).colorScheme.primary,
                   autocorrect: false,
                   autofillHints: const <String>[AutofillHints.username],
-                  decoration: const InputDecoration(hintText: 'Username'),
+                  decoration: InputDecoration(hintText: l10n.itemUsername),
                 ),
               ),
               const SizedBox(height: Dimens.pt16),
@@ -64,7 +68,7 @@ class _LoginDialogState extends State<LoginDialog> with ItemActionMixin {
                   obscureText: true,
                   autocorrect: false,
                   autofillHints: const <String>[AutofillHints.password],
-                  decoration: const InputDecoration(hintText: 'Password'),
+                  decoration: InputDecoration(hintText: l10n.itemPassword),
                 ),
               ),
               const SizedBox(height: Dimens.pt16),
@@ -102,9 +106,11 @@ class _LoginDialogState extends State<LoginDialog> with ItemActionMixin {
                     child: Text.rich(
                       TextSpan(
                         children: <InlineSpan>[
-                          const TextSpan(
-                            text: 'I agree to ',
-                            style: TextStyle(fontWeight: FontWeight.w500),
+                          TextSpan(
+                            text: l10n.itemIAgreeTo,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                           WidgetSpan(
                             child: Transform.translate(
@@ -115,7 +121,7 @@ class _LoginDialogState extends State<LoginDialog> with ItemActionMixin {
                                   context,
                                 ),
                                 child: Text(
-                                  'End User Agreement',
+                                  l10n.itemEndUserAgreement,
                                   style: TextStyle(
                                     color: Theme.of(
                                       context,
@@ -143,7 +149,7 @@ class _LoginDialogState extends State<LoginDialog> with ItemActionMixin {
                         context.pop();
                         context.read<AuthBloc>().add(AuthInitialize());
                       },
-                      child: const Text('Cancel'),
+                      child: Text(l10n.itemCancel),
                     ),
                     ElevatedButton(
                       onPressed: () {
@@ -165,7 +171,7 @@ class _LoginDialogState extends State<LoginDialog> with ItemActionMixin {
                         ),
                       ),
                       child: Text(
-                        'Log in',
+                        l10n.itemLogIn,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Theme.of(context).colorScheme.onPrimary,

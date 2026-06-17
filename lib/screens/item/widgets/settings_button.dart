@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hacki/config/paths.dart';
 import 'package:hacki/config/router.dart';
+import 'package:hacki/l10n/app_localizations.dart';
 import 'package:hacki/models/discoverable_feature.dart';
 import 'package:hacki/screens/widgets/widgets.dart';
 import 'package:hacki/services/services.dart';
@@ -16,7 +17,7 @@ class SettingsButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      tooltip: 'Go to settings',
+      tooltip: AppLocalizations.of(context).tooltipGoToSettings,
       icon: CustomDescribedFeatureOverlay(
         tapTarget: Icon(
           Icons.stream,

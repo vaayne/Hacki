@@ -7,6 +7,7 @@ import 'package:hacki/config/constants.dart';
 import 'package:hacki/config/paths.dart';
 import 'package:hacki/cubits/cubits.dart';
 import 'package:hacki/extensions/extensions.dart';
+import 'package:hacki/l10n/app_localizations.dart';
 import 'package:hacki/models/models.dart';
 import 'package:hacki/screens/screens.dart';
 import 'package:hacki/screens/widgets/widgets.dart';
@@ -59,6 +60,7 @@ class _ReplyBoxState extends State<ReplyBox> with ItemActionMixin {
       builder: (BuildContext context, EditState editState) {
         return BlocBuilder<PostCubit, PostState>(
           builder: (BuildContext context, PostState postState) {
+            final AppLocalizations l10n = AppLocalizations.of(context);
             final Item? replyingTo = editState.replyingTo;
             final bool isLoading = postState.status.isLoading;
 
@@ -109,9 +111,8 @@ class _ReplyBoxState extends State<ReplyBox> with ItemActionMixin {
                               ),
                               child: Text(
                                 replyingTo == null
-                                    ? 'Editing'
-                                    : 'Replying to '
-                                          '${replyingTo.by}',
+                                    ? l10n.itemEditing
+                                    : l10n.itemReplyingTo(replyingTo.by),
                                 style: const TextStyle(color: Palette.grey),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -175,13 +176,13 @@ class _ReplyBoxState extends State<ReplyBox> with ItemActionMixin {
                                     barrierDismissible: false,
                                     builder: (BuildContext context) =>
                                         AlertDialog(
-                                          title: const Text('Abort editing?'),
+                                          title: Text(l10n.itemAbortEditing),
                                           actions: <Widget>[
                                             TextButton(
                                               onPressed: context.pop,
-                                              child: const Text(
-                                                'No',
-                                                style: TextStyle(
+                                              child: Text(
+                                                l10n.itemNo,
+                                                style: const TextStyle(
                                                   color: Palette.red,
                                                 ),
                                               ),
@@ -191,7 +192,7 @@ class _ReplyBoxState extends State<ReplyBox> with ItemActionMixin {
                                                 context.pop();
                                                 onCloseTapped();
                                               },
-                                              child: const Text('Yes'),
+                                              child: Text(l10n.itemYes),
                                             ),
                                           ],
                                         ),
@@ -271,6 +272,7 @@ class _ReplyBoxState extends State<ReplyBox> with ItemActionMixin {
   }
 
   void showTextPopup() {
+    final AppLocalizations l10n = AppLocalizations.of(context);
     final Item? replyingTo = context.read<EditCubit>().state.replyingTo;
 
     if (replyingTo == null) {
@@ -311,9 +313,9 @@ class _ReplyBoxState extends State<ReplyBox> with ItemActionMixin {
                       ),
                       const Spacer(),
                       TextButton(
-                        child: const Text(
-                          'View thread',
-                          style: TextStyle(fontSize: TextDimens.pt14),
+                        child: Text(
+                          l10n.itemViewThread,
+                          style: const TextStyle(fontSize: TextDimens.pt14),
                         ),
                         onPressed: () {
                           HapticFeedbackUtils.light();
@@ -330,9 +332,9 @@ class _ReplyBoxState extends State<ReplyBox> with ItemActionMixin {
                         },
                       ),
                       TextButton(
-                        child: const Text(
-                          'Copy all',
-                          style: TextStyle(fontSize: TextDimens.pt14),
+                        child: Text(
+                          l10n.itemCopyAll,
+                          style: const TextStyle(fontSize: TextDimens.pt14),
                         ),
                         onPressed: () => Clipboard.setData(
                           ClipboardData(text: replyingTo.text),

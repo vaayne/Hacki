@@ -2,6 +2,7 @@ import 'package:flutter/material.dart' hide Badge;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hacki/cubits/cubits.dart';
+import 'package:hacki/l10n/app_localizations.dart';
 import 'package:hacki/screens/screens.dart';
 import 'package:hacki/screens/widgets/widgets.dart';
 import 'package:hacki/styles/styles.dart';
@@ -166,11 +167,13 @@ class _TabletStoryView extends StatelessWidget {
           return ItemScreen.tablet(context, state.itemScreenArgs!);
         }
 
+        final AppLocalizations l10n = AppLocalizations.of(context);
+
         return Material(
           child: ColoredBox(
             color: Theme.of(context).canvasColor,
-            child: const Center(
-              child: Text('Tap on story tile to view its comments.'),
+            child: Center(
+              child: Text(l10n.homeTapStoryToViewComments),
             ),
           ),
         );

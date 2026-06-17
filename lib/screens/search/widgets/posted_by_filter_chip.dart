@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hacki/l10n/app_localizations.dart';
 import 'package:hacki/models/models.dart';
 import 'package:hacki/screens/widgets/widgets.dart';
 import 'package:hacki/styles/styles.dart';
@@ -25,7 +26,9 @@ class PostedByFilterChip extends StatelessWidget {
         onChanged(username);
       },
       selected: filter != null,
-      label: '''posted by ${filter?.author ?? ''}'''.trimRight(),
+      label: AppLocalizations.of(
+        context,
+      ).searchPostedBy(filter?.author ?? '').trimRight(),
     );
   }
 
@@ -40,6 +43,7 @@ class PostedByFilterChip extends StatelessWidget {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
+        final AppLocalizations l10n = AppLocalizations.of(context);
         return SimpleDialog(
           children: <Widget>[
             Padding(
@@ -48,7 +52,7 @@ class PostedByFilterChip extends StatelessWidget {
                 controller: usernameController,
                 cursorColor: Theme.of(context).colorScheme.primary,
                 autocorrect: false,
-                decoration: const InputDecoration(hintText: 'Username'),
+                decoration: InputDecoration(hintText: l10n.searchUsernameHint),
               ),
             ),
             const SizedBox(height: Dimens.pt16),
@@ -59,18 +63,18 @@ class PostedByFilterChip extends StatelessWidget {
                 children: <Widget>[
                   TextButton(
                     onPressed: () => context.pop(filter?.author),
-                    child: const Text('Cancel'),
+                    child: Text(l10n.cancel),
                   ),
                   TextButton(
                     onPressed: () => context.pop(),
-                    child: const Text('Clear'),
+                    child: Text(l10n.searchClear),
                   ),
                   ElevatedButton(
                     onPressed: () {
                       final String text = usernameController.text.trim();
                       context.pop(text.isEmpty ? null : text);
                     },
-                    child: const Text('Confirm'),
+                    child: Text(l10n.searchConfirm),
                   ),
                 ],
               ),

@@ -53,20 +53,14 @@ abstract class Constants {
   static const String iphoneUserAgent =
       '''Mozilla/5.0 (iPhone; CPU iPhone OS 18_3_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3.1 Mobile/15E148 Safari/604.1''';
 
-  static String get tips => <String>[
-    'Swipe right on story title to vote or share',
-    'Long press on story title to copy its article URL',
-    'Long press on any link in comment or story to copy',
-    'Long press and select text in comment to search on HN',
-    'Text preview on collapsed comment can be turned off in settings',
-    'Use lazy fetching to fetch only the root level comments',
-    'Turn on True Dark Mode in settings to use black background',
-    'Download stories in settings to read stories offline',
-    'Open any Hacker News links in Hacki via the system share menu',
-    '''Swipe right on a comment and tap the dots icon to search for the poster within the thread or across HN''',
-    '''Disabling `Mark Read Stories` in settings will clear your existing read history''',
-    "What's beyond the universe?",
-  ].randomlyPicked!;
+  /// Total number of localized tips. Keep in sync with `tip1`..`tipN` in the
+  /// arb files and `localizedTip` in lib/l10n/tips_l10n.dart.
+  static const int tipCount = 12;
+
+  /// A random tip index in `[0, tipCount)`, resolved to a localized string at
+  /// the UI layer via `localizedTip`.
+  static int get randomTipIndex =>
+      List<int>.generate(tipCount, (int index) => index).randomlyPicked!;
 
   static final String happyFace = <String>[
     '(๑•̀ㅂ•́)و✧',
@@ -146,15 +140,4 @@ abstract class HeroTags {
       'mobile_download_progress_reminder';
   static const String progressReminderTextHeroTag =
       'mobile_download_progress_reminder_text';
-}
-
-abstract class SnackBarMessages {
-  static const String notLoggedInNoVoting =
-      '''Not logged in, no voting! (;｀O´)o''';
-  static const String noVotingOnYourOwnComment =
-      '''No voting on your own post! (;｀O´)o''';
-  static const String karmalyBroke =
-      '''You can't downvote because you are karmaly broke.''';
-  static const String voteSubmitted = 'Vote submitted.';
-  static const String voteCanceled = 'Vote canceled.';
 }

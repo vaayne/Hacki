@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hacki/config/constants.dart';
+import 'package:hacki/l10n/app_localizations.dart';
 import 'package:hacki/models/models.dart';
 import 'package:hacki/screens/widgets/custom_linkify/custom_linkify.dart';
 import 'package:hacki/services/dialog_proxy.dart';
@@ -38,7 +39,7 @@ extension ContextMenuBuilder on Widget {
               context,
               selectedText,
             ),
-            label: 'Search HN',
+            label: AppLocalizations.of(context).ctxSearchHn,
           ),
         )
         ..addAll(<ContextMenuButtonItem>[

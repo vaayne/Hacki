@@ -1,0 +1,581 @@
+{
+  "@@locale": "en",
+  "settingsTitle": "Settings",
+  "@settingsTitle": {
+    "description": "Title of the settings screen app bar."
+  },
+  "language": "Language",
+  "@language": {
+    "description": "Label for the in-app language selector."
+  },
+  "languageSystem": "System",
+  "@languageSystem": {
+    "description": "Language option that follows the system locale."
+  },
+  "languageEnglish": "English",
+  "languageChinese": "简体中文",
+  "settingsLogIn": "Log In",
+  "settingsLogOut": "Log Out",
+  "settingsLogOutConfirmation": "Log out as {username}?",
+  "@settingsLogOutConfirmation": {
+    "placeholders": {
+      "username": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsDefaultFetchMode": "Default fetch mode",
+  "settingsDefaultCommentsOrder": "Default comments order",
+  "settingsDateTimeDisplayOfComments": "Date time display of comments",
+  "settingsDataSource": "Data source",
+  "settingsLeft": "Left",
+  "settingsRight": "Right",
+  "settingsAccentColor": "Accent Color",
+  "settingsFont": "Font",
+  "settingsTheme": "Theme",
+  "settingsLight": "Light",
+  "settingsDark": "Dark",
+  "settingsSystem": "System",
+  "settingsFilterKeywords": "Filter Keywords",
+  "settingsFilterKeywordsDescription": "story or comment that contains keywords here will be hidden.",
+  "settingsAddKeyword": "Add keyword",
+  "settingsOkay": "Okay",
+  "settingsExportFavorites": "Export Favorites",
+  "settingsImportFavorites": "Import Favorites",
+  "settingsClearFavorites": "Clear Favorites",
+  "settingsClearCache": "Clear Cache",
+  "settingsClearCacheConfirmation": "Clear cache?",
+  "settingsClearCacheDescription": "Clear all cached images, stories and comments.",
+  "settingsCacheCleared": "Cache cleared!",
+  "settingsRestoreDefaultSettings": "Restore Default Settings",
+  "settingsRestoreDefaultSettingsConfirmation": "Restore default settings?",
+  "settingsRestoreDefaultSettingsDescription": "Your existing settings will be wiped out.",
+  "settingsDefaultSettingsRestored": "Default settings restored.",
+  "settingsLogs": "Logs",
+  "settingsResetFeatureDiscovery": "Reset Feature Discovery",
+  "settingsResetTips": "Reset Tips",
+  "settingsFeatureRequest": "Feature Request",
+  "settingsRateHacki": "Rate Hacki : )",
+  "settingsAbout": "About",
+  "settingsDevModeOn": "You are a dev now.",
+  "settingsDevModeOff": "Dev mode disabled.",
+  "settingsDisableHackerNewsThemeFirst": "Please disable Hacker News Theme first.",
+  "settingsDeveloper": "Developer",
+  "settingsSourceCode": "Source code",
+  "settingsLikeThisApp": "Like this app?",
+  "settingsMusicIListenTo": "Music I listen to",
+  "settingsPrivacyPolicy": "Privacy policy",
+  "settingsReportIssue": "Report issue",
+  "settingsEmail": "Email",
+  "settingsCancel": "Cancel",
+  "settingsConfirm": "Confirm",
+  "settingsYes": "Yes",
+  "settingsNo": "No",
+  "settingsQrCode": "QR Code",
+  "settingsFromFile": "From File",
+  "settingsCouldNotReadFile": "Could not read file.",
+  "settingsFavoritesImported": "Favorites imported successfully.",
+  "settingsNoFavoriteItem": "You don't have any favorite item.",
+  "settingsFavoritesCopied": "Ids of favorites have been copied to clipboard.",
+  "settingsRemoveAllFavoritesConfirmation": "Remove all favorites?",
+  "settingsRemoveAllFavoritesDescription": "This will not effect favorites saved in your Hacker News account.",
+  "settingsAllFavoritesRemoved": "All favorites have been removed.",
+  "settingsOfflineMode": "Offline Mode",
+  "settingsOfflineModeActivated": "Offline mode activated.",
+  "settingsOfflineModeDeactivated": "Offline mode deactivated.",
+  "settingsDownloadStories": "Download Stories",
+  "settingsDownloadingStories": "Downloading Stories ({downloaded}/{total})",
+  "@settingsDownloadingStories": {
+    "placeholders": {
+      "downloaded": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsStoriesDownloaded": "{count} stories downloaded.",
+  "@settingsStoriesDownloaded": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsDownloadStoriesDescription": "download latest stories that have at least one comment for offline reading. (Please keep Hacki in foreground while downloading.)",
+  "settingsLastDownloadedAt": "Last downloaded at {time}",
+  "@settingsLastDownloadedAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsHowManyStories": "How many stories do you want to download?",
+  "settingsDownloadWebPages": "Download web pages as well?",
+  "settingsDownloadWebPagesDescription": "It will take longer time.",
+  "settingsDefaultTabBar": "Default tab bar",
+  "settingsTextScaleFactor": "Text scale factor: {value}",
+  "@settingsTextScaleFactor": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsSystemDefault": "system default",
+  "prefSkipButtonsTitle": "Skip Buttons",
+  "prefSkipButtonsSubtitle": "display floating buttons on the thread screen that let you jump to the previous or next root comment.",
+  "prefSplitViewTitle": "Split View",
+  "prefSplitViewSubtitle": "enable split view on large screen. Relaunch the app to see effect.",
+  "prefEyeCandyTitle": "Eye Candy",
+  "prefEyeCandySubtitle": "get everybody moving.",
+  "prefHackerNewsThemeTitle": "Hacker News Theme",
+  "prefHackerNewsThemeSubtitle": "experimental.",
+  "prefSwipeGestureTitle": "Swipe Gesture for Switching Tabs",
+  "prefSwipeGestureSubtitle": "enable swipe gesture for switching between tabs. If enabled, long press on Story tile to trigger the action menu and double tap to open the URL (if rich tile is disabled).",
+  "prefNotificationTitle": "Notification on New Reply",
+  "prefNotificationSubtitle": "Hacki scans for new replies to your 15 most recent comments or stories every 5 minutes while the app is running in the foreground.",
+  "prefCollapseModeTitle": "Tap Anywhere to Collapse",
+  "prefCollapseModeSubtitle": "if disabled, tap on the top of comment tile to collapse.",
+  "prefIndexedStoryTileTitle": "Indexed Story Tile",
+  "prefIndexedStoryTileSubtitle": "show index on story tile.",
+  "prefRichStoryTileTitle": "Rich Story Tile",
+  "prefRichStoryTileSubtitle": "show web preview on story tile.",
+  "prefImageAlignmentTitle": "Image Alignment",
+  "prefExpandTileTitle": "Expand Tile for Longer Text",
+  "prefExpandTileSubtitle": "more space for more text on rich story tile.",
+  "prefShowPreviewImageTitle": "Show Preview Image",
+  "prefShowPreviewImageSubtitle": "show preview image on rich story tile.",
+  "prefShowFaviconTitle": "Show Favicon",
+  "prefShowFaviconSubtitle": "show favicon on simple story tile.",
+  "prefShowMetadataTitle": "Show Metadata",
+  "prefShowMetadataSubtitle": "show number of comments and post date on story tile.",
+  "prefShowUrlTitle": "Show URL",
+  "prefShowUrlSubtitle": "show URL on story tile.",
+  "prefDividerTitle": "Divider",
+  "prefDividerSubtitle": "show divider between story tiles.",
+  "prefSafariReaderTitle": "Safari Reader",
+  "prefSafariReaderSubtitle": "enter reader mode in Safari directly when it is available.",
+  "prefMarkReadStoriesTitle": "Mark Read Stories",
+  "prefMarkReadStoriesSubtitle": "grey out stories you have read.",
+  "prefHideStoryTitle": "Hide Story Instead Of Marking Gray",
+  "prefHideStorySubtitle": "swipe left on story tile or tap on the trash can icon to hide the story instead of marking it gray.",
+  "prefManualPaginationTitle": "Manual Pagination",
+  "prefManualPaginationSubtitle": "so you can get stuff done.",
+  "prefPersistCollapseStateTitle": "Persist Collapse State",
+  "prefPersistCollapseStateSubtitle": "persist collapse state of comments upon leaving the app.",
+  "prefPreserveCollapseStateTitle": "Preserve Collapse State",
+  "prefPreserveCollapseStateSubtitle": "preserve collapse state of comments upon leaving a thread.",
+  "prefCompactCollapsedTileTitle": "Hide Preview on Collapse",
+  "prefCompactCollapsedTileSubtitle": "no preview text for collapsed comments.",
+  "prefHighlightNewCommentsTitle": "Highlight New Comments",
+  "prefHighlightNewCommentsSubtitle": "highlight new comments since your last visit.",
+  "prefCustomTabTitle": "Use Custom Tabs",
+  "prefCustomTabSubtitle": "use Custom tabs for URLs. If disabled, default browser is used instead.",
+  "prefWebViewBottomSheetTitle": "Web View Bottom Sheet",
+  "prefWebViewBottomSheetSubtitle": "display story's URL in a draggable bottom sheet. (experimental)",
+  "prefTrueDarkModeTitle": "True Dark Mode",
+  "prefTrueDarkModeSubtitle": "real dark.",
+  "prefHapticFeedbackTitle": "Haptic Feedback",
+  "prefDevModeTitle": "Dev Mode",
+  "prefStoryMarkingModeTitle": "Mark as Read on",
+  "prefAppColorTitle": "Accent Color",
+  "prefDividerThread": "Thread",
+  "prefDividerLookAndFeel": "Look And Feel",
+  "commentsOrderNatural": "Natural",
+  "commentsOrderNewestFirst": "Newest first",
+  "commentsOrderOldestFirst": "Oldest first",
+  "fontSizeSmall": "Small",
+  "fontSizeRegular": "Regular",
+  "fontSizeLarge": "Large",
+  "fontSizeXLarge": "XLarge",
+  "fontSizeXXLarge": "XXLarge",
+  "storyMarkingModeScrollPast": "scrolling past",
+  "storyMarkingModeTap": "tapping",
+  "storyMarkingModeScrollPastOrTap": "scrolling past or tapping",
+  "storyMarkingModeSwipeGestureOnly": "swipe gesture only",
+  "maxOfflineStoriesCountAll": "All",
+  "exportDestinationQrCode": "QR code",
+  "exportDestinationClipboard": "ClipBoard",
+  "itemLogIn": "Log in",
+  "itemAboutUserSemantics": "About {id}. {about}",
+  "@itemAboutUserSemantics": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      },
+      "about": {
+        "type": "String"
+      }
+    }
+  },
+  "itemAboutUser": "About {id}",
+  "@itemAboutUser": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "itemEmpty": "empty",
+  "itemSearch": "Search",
+  "itemOkay": "Okay",
+  "itemSearchOnHn": "Search on HN",
+  "itemSearchInThread": "Search in thread",
+  "itemUpvoted": "Upvoted",
+  "itemUpvote": "Upvote",
+  "itemDownvoted": "Downvoted",
+  "itemDownvote": "Downvote",
+  "itemUnfavorite": "Unfavorite",
+  "itemFavorite": "Favorite",
+  "itemShare": "Share",
+  "itemFlag": "Flag",
+  "itemUnblock": "Unblock",
+  "itemBlock": "Block",
+  "itemViewInBrowser": "View in Browser",
+  "itemCancel": "Cancel",
+  "itemCommentUpdated": "Comment updated! {face}",
+  "@itemCommentUpdated": {
+    "placeholders": {
+      "face": {
+        "type": "String"
+      }
+    }
+  },
+  "itemCommentSubmitted": "Comment submitted! {face}",
+  "@itemCommentSubmitted": {
+    "placeholders": {
+      "face": {
+        "type": "String"
+      }
+    }
+  },
+  "itemViewAncestors": "View ancestors",
+  "itemViewInSeparateThread": "View in separate thread",
+  "itemTimeForBed": "Time for bed",
+  "itemHackiAnniversary": "Hacki turns {years} today!",
+  "@itemHackiAnniversary": {
+    "placeholders": {
+      "years": {
+        "type": "Object"
+      }
+    }
+  },
+  "itemLinkCopied": "Link copied.",
+  "itemViewAllComments": "View all comments",
+  "itemViewParent": "View Parent",
+  "itemViewRoot": "View Root",
+  "itemNothingYet": "Nothing yet",
+  "itemEditing": "Editing",
+  "itemReplyingTo": "Replying to {username}",
+  "@itemReplyingTo": {
+    "placeholders": {
+      "username": {
+        "type": "String"
+      }
+    }
+  },
+  "itemAbortEditing": "Abort editing?",
+  "itemNo": "No",
+  "itemYes": "Yes",
+  "itemViewThread": "View thread",
+  "itemCopyAll": "Copy all",
+  "itemLoggedInSuccessfully": "Logged in successfully! {face}",
+  "@itemLoggedInSuccessfully": {
+    "placeholders": {
+      "face": {
+        "type": "String"
+      }
+    }
+  },
+  "itemUsername": "Username",
+  "itemPassword": "Password",
+  "itemIAgreeTo": "I agree to ",
+  "itemEndUserAgreement": "End User Agreement",
+  "itemTips": "Tips",
+  "itemTimeMachineTip": "When you find yourself too deep in a thread, you can swipe left on a comment to see all its ancestors including the root story (or comment).",
+  "itemDismiss": "Dismiss",
+  "itemLgtm": "LGTM",
+  "actionRemovedFromFavorites": "Removed from favorites.",
+  "actionAddedToFavorites": "Added to favorites.",
+  "actionShareAsImage": "Share as image",
+  "actionLinkToArticle": "Link to article",
+  "actionLinkToHn": "Link to HN",
+  "actionFlagThisComment": "Flag this comment?",
+  "actionFlagThisCommentBy": "Flag this comment posted by {username}?",
+  "@actionFlagThisCommentBy": {
+    "placeholders": {
+      "username": {
+        "type": "String"
+      }
+    }
+  },
+  "actionCancel": "Cancel",
+  "actionYes": "Yes",
+  "actionCommentFlagged": "Comment flagged!",
+  "actionUnblockThisUser": "Unblock this user?",
+  "actionBlockThisUser": "Block this user?",
+  "actionUnblockUserConfirm": "Do you want to unblock {username} and display comments posted by this user?",
+  "@actionUnblockUserConfirm": {
+    "placeholders": {
+      "username": {
+        "type": "String"
+      }
+    }
+  },
+  "actionBlockUserConfirm": "Do you want to block {username} and hide comments posted by this user?",
+  "@actionBlockUserConfirm": {
+    "placeholders": {
+      "username": {
+        "type": "String"
+      }
+    }
+  },
+  "actionUserUnblocked": "User unblocked!",
+  "actionUserBlocked": "User blocked!",
+  "dialogAbortDownloading": "Abort downloading?",
+  "dialogCancel": "Cancel",
+  "dialogNo": "No",
+  "dialogYes": "Yes",
+  "dialogDownloadCompleted": "Download completed",
+  "dialogNoooice": "Noooice!",
+  "itemKarmaAndComments": "{score} karma, {count} cmt{count, plural, one {} other {s}}",
+  "@itemKarmaAndComments": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cancel": "Cancel",
+  "shareAsImage": "Share as image",
+  "shareFromHackerNews": "From Hacker News:",
+  "shareHackiBanner": "Shared from Hacki, an open-source Hacker News client.",
+  "shareSaveToAlbum": "Save to album",
+  "shareShare": "Share",
+  "shareShowRichStoryTile": "Show Rich Story Tile",
+  "shareShowParentStory": "Show Parent Story",
+  "shareShowHackiBanner": "Show Shared from Hacki Banner",
+  "shareCopyLinkOnSharing": "Copy Link to HN on Sharing",
+  "shareTextScaling": "Text Scaling",
+  "shareImageSaved": "Image saved.",
+  "shareImageSaveFailed": "Failed to save image.",
+  "shareTipsTitle": "Tips",
+  "shareTipsContent": "You can select text in the comment before tapping on Share button and the text will be highlighted in resulted screenshot.",
+  "shareTipsDismiss": "Dismiss",
+  "shareTipsInteresting": "Interesting",
+  "submitPostSubmitted": "Post submitted.",
+  "submitQuitEditing": "Quit editing?",
+  "submitYes": "Yes",
+  "submitTitle": "Submit",
+  "submitConfirm": "Submit?",
+  "submitTitleHint": "Title",
+  "submitUrlHint": "Url",
+  "submitOr": "or",
+  "submitTextHint": "Text",
+  "searchPostedBy": "posted by {author}",
+  "@searchPostedBy": {
+    "placeholders": {
+      "author": {
+        "type": "String"
+      }
+    }
+  },
+  "searchUsernameHint": "Username",
+  "searchClear": "Clear",
+  "searchConfirm": "Confirm",
+  "searchPoints": "points",
+  "searchPointsValue": "{operator} {points} points",
+  "@searchPointsValue": {
+    "placeholders": {
+      "operator": {
+        "type": "String"
+      },
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "searchPointsHint": "Points",
+  "searchRemove": "Remove",
+  "searchNumComments": "num_cmt",
+  "searchNumCommentsValue": "{operator} {commentsNumber} comments",
+  "@searchNumCommentsValue": {
+    "placeholders": {
+      "operator": {
+        "type": "String"
+      },
+      "commentsNumber": {
+        "type": "int"
+      }
+    }
+  },
+  "searchNumCommentsHint": "Number of comments",
+  "searchLoadingFailed": "loading failed.",
+  "searchHint": "Search Hacker News",
+  "searchReset": "reset",
+  "searchNewestFirst": "newest first",
+  "searchExactMatch": "exact match",
+  "searchNothingFound": "Nothing found...",
+  "homeTourTitle": "Welcome to Hacki!",
+  "homeTourContent": "Take a quick tour to see what Hacki can do?",
+  "commonNo": "No",
+  "commonYes": "Yes",
+  "homeTapStoryToViewComments": "Tap on story tile to view its comments.",
+  "homeUnpin": "Unpin",
+  "profileMarkAllAsRead": "Mark all as read",
+  "commonLoadingFailed": "loading failed.",
+  "profileInboxCommentMeta": "{timeAgo} from {by}:",
+  "@profileInboxCommentMeta": {
+    "placeholders": {
+      "timeAgo": {
+        "type": "String"
+      },
+      "by": {
+        "type": "String"
+      }
+    }
+  },
+  "profileSyncCompleted": "Sync completed.",
+  "profileSyncFromHackerNews": "Sync from Hacker News",
+  "profileStory": "Story",
+  "profileComment": "Comment",
+  "profileFavoritesEmpty": "Your favorite stories will show up here.\nThey will be synced to your Hacker News account if you are logged in.",
+  "profileNoFavoriteStory": "No favorite story.",
+  "profileNoFavoriteComment": "No favorite comment.",
+  "commonOfflineMode": "You are currently in offline mode. ",
+  "commonOfflineModeWithExit": "You are currently in offline mode. Exit to fetch latest stories.",
+  "commonExitOfflineMode": "Exit offline mode?",
+  "commonCancel": "Cancel",
+  "commonExit": "Exit",
+  "commonLoadPage": "Load Page {page}",
+  "@commonLoadPage": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      }
+    }
+  },
+  "commonPin": "Pin",
+  "commonMore": "More",
+  "commonReadStoryMarkingDisabled": "Read story marking is disabled.",
+  "commonItemMeta": "{timeAgo} by {by}",
+  "@commonItemMeta": {
+    "placeholders": {
+      "timeAgo": {
+        "type": "String"
+      },
+      "by": {
+        "type": "String"
+      }
+    }
+  },
+  "commonDeleted": "deleted",
+  "commonFetchingData": "Fetching data...",
+  "commonLinkPreviewError": "Oops! Unable to parse the url. We have sent feedback to our developers & we will try to fix this in our next release. Thanks!",
+  "commonNoCommentYet": "no comment yet.",
+  "tip1": "Swipe right on story title to vote or share",
+  "tip2": "Long press on story title to copy its article URL",
+  "tip3": "Long press on any link in comment or story to copy",
+  "tip4": "Long press and select text in comment to search on HN",
+  "tip5": "Text preview on collapsed comment can be turned off in settings",
+  "tip6": "Use lazy fetching to fetch only the root level comments",
+  "tip7": "Turn on True Dark Mode in settings to use black background",
+  "tip8": "Download stories in settings to read stories offline",
+  "tip9": "Open any Hacker News links in Hacki via the system share menu",
+  "tip10": "Swipe right on a comment and tap the dots icon to search for the poster within the thread or across HN",
+  "tip11": "Disabling `Mark Read Stories` in settings will clear your existing read history",
+  "tip12": "What's beyond the universe?",
+  "snackVoteSubmitted": "Vote submitted.",
+  "snackVoteCanceled": "Vote canceled.",
+  "snackKarmalyBroke": "You can't downvote because you are karmaly broke.",
+  "snackNotLoggedInNoVoting": "Not logged in, no voting! (;｀O´)o",
+  "snackNoVotingOwnPost": "No voting on your own post! (;｀O´)o",
+  "pollTotalVotes": "Total votes: {count}",
+  "@pollTotalVotes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pollVoteCount": "{count, plural, =1{1 vote} other{{count} votes}}",
+  "@pollVoteCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tooltipGoToSettings": "Go to settings",
+  "tooltipAddToFavorites": "Add to favorites",
+  "tooltipPinToHome": "Pin to home screen",
+  "tooltipSearchInThread": "Search in thread",
+  "snackPinnedToHome": "Pinned to home page.",
+  "snackLogsCopied": "Logs copied.",
+  "snackLinkCopied": "Link copied.",
+  "ctxSearchHn": "Search HN",
+  "searchInThisThreadHint": "Search in this thread",
+  "searchResultsCount": "{count, plural, =1{1 result} other{{count} results}}",
+  "@searchResultsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "filterByOp": "by OP",
+  "filterByMe": "by me",
+  "filterNew": "new",
+  "filterClear": "clear",
+  "profileSubmit": "Submit",
+  "profileNeedLoginFirst": "You need to log in first.",
+  "profileInbox": "Inbox : {count}",
+  "@profileInbox": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "profileFavorite": "Favorite",
+  "profileSubmitted": "Submitted",
+  "commentsFetched": "{count, plural, =1{1 new comment fetched.} other{{count} new comments fetched.}}",
+  "@commentsFetched": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "rangePastDay": "past day",
+  "rangePastWeek": "past week",
+  "rangePastMonth": "past month",
+  "rangePastYear": "past year",
+  "centeredHidden": "hidden",
+  "centeredDeleted": "deleted",
+  "centeredDead": "dead",
+  "centeredBlocked": "blocked",
+  "centeredEmpty": "empty",
+  "featureTapToDismiss": "Tap anywhere inside to dismiss",
+  "featureFavStoryTitle": "Fav a Story",
+  "featureFavStoryDesc": "Add it to your favorites.",
+  "featureGoToSettingsTitle": "Go to Settings",
+  "featureGoToSettingsDesc": "You can now go to settings page directly from a thread.",
+  "featureLoginTitle": "Log in for more",
+  "featureLoginDesc": "Log in using your Hacker News account to check out stories and comments you have posted in the past, and get in-app notification when there is new reply to your comments or stories.",
+  "featurePinStoryTitle": "Pin a Story",
+  "featurePinStoryDesc": "Pin this story to the top of your home screen so that you can come back later.",
+  "featureJumpUpTitle": "Shortcut",
+  "featureJumpUpDesc": "Tapping on this button will take you to the previous root level comment.\n\nLong press on it to jump to the very beginning of this thread.",
+  "featureJumpDownTitle": "Shortcut",
+  "featureJumpDownDesc": "Tapping on this button will take you to the next root level comment.\n\nLong press on it to jump to the end of this thread.",
+  "featureSearchInThreadTitle": "Search in Thread",
+  "featureSearchInThreadDesc": "Search for comments in this thread.",
+  "notificationNewReply": "You have a new reply!"
+}

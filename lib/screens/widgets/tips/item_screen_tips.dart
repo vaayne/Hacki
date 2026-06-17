@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hacki/config/constants.dart';
 import 'package:hacki/cubits/cubits.dart';
+import 'package:hacki/l10n/app_localizations.dart';
 import 'package:hacki/styles/styles.dart';
 import 'package:video_player/video_player.dart';
 
@@ -47,10 +48,11 @@ class _ItemScreenTipsState extends State<ItemScreenTips> {
         );
       },
       openBuilder: (BuildContext context, void Function() action) {
+        final AppLocalizations l10n = AppLocalizations.of(context);
         _controller.play();
         context.read<TipsCubit>().completeTips(Tips.itemScreen);
         return Scaffold(
-          appBar: AppBar(title: const Text('Tips')),
+          appBar: AppBar(title: Text(l10n.itemTips)),
           body: Padding(
             padding: const EdgeInsets.symmetric(horizontal: Dimens.pt12),
             child: Column(
@@ -85,7 +87,7 @@ class _ItemScreenTipsState extends State<ItemScreenTips> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: Dimens.pt12),
                   child: Text(
-                    '''When you find yourself too deep in a thread, you can swipe left on a comment to see all its ancestors including the root story (or comment).''',
+                    l10n.itemTimeMachineTip,
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.onSecondaryContainer,
                       fontSize: TextDimens.pt16,
@@ -98,16 +100,16 @@ class _ItemScreenTipsState extends State<ItemScreenTips> {
                     const Spacer(),
                     TextButton(
                       onPressed: action,
-                      child: const Text(
-                        'Dismiss',
-                        style: TextStyle(fontSize: TextDimens.pt16),
+                      child: Text(
+                        l10n.itemDismiss,
+                        style: const TextStyle(fontSize: TextDimens.pt16),
                       ),
                     ),
                     TextButton(
                       onPressed: action,
-                      child: const Text(
-                        'LGTM',
-                        style: TextStyle(
+                      child: Text(
+                        l10n.itemLgtm,
+                        style: const TextStyle(
                           fontSize: TextDimens.pt16,
                           fontWeight: FontWeight.bold,
                         ),

@@ -47,6 +47,7 @@ abstract final class Preference<T> extends Equatable with SettingsDisplayable {
         AppColorPreference(),
         DateFormatPreference(),
         HackerNewsDataSourcePreference(),
+        LocalePreference(),
         const TextScaleFactorPreference(),
 
         ///
@@ -975,6 +976,31 @@ final class DateFormatPreference extends IntPreference {
 
   @override
   String get title => 'Date Format';
+}
+
+/// Selected app language, stored as the index of [AppLanguage].
+/// 0 ([AppLanguage.system]) follows the device locale.
+///
+/// Rendered by a dedicated dropdown on the settings screen rather than the
+/// boolean settings list, hence [isDisplayable] is false.
+final class LocalePreference extends IntPreference {
+  LocalePreference({int? val}) : super(val: val ?? _localeDefaultValue);
+
+  static final int _localeDefaultValue = AppLanguage.system.index;
+
+  @override
+  LocalePreference copyWith({required int? val}) {
+    return LocalePreference(val: val);
+  }
+
+  @override
+  String get key => 'locale';
+
+  @override
+  String get title => 'Language';
+
+  @override
+  bool get isDisplayable => false;
 }
 
 final class HackerNewsDataSourcePreference extends IntPreference {

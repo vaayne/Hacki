@@ -7,6 +7,7 @@ import 'package:hacki/blocs/auth/auth_bloc.dart';
 import 'package:hacki/config/constants.dart';
 import 'package:hacki/cubits/cubits.dart';
 import 'package:hacki/extensions/context_extension.dart';
+import 'package:hacki/l10n/app_localizations.dart';
 import 'package:hacki/models/models.dart';
 import 'package:hacki/screens/widgets/widgets.dart';
 import 'package:hacki/styles/styles.dart';
@@ -35,7 +36,7 @@ class InThreadSearchIconButton extends StatelessWidget {
           feature: DiscoverableFeature.searchInThread,
           contentLocation: ContentLocation.below,
           child: IconButton(
-            tooltip: 'Search in thread',
+            tooltip: AppLocalizations.of(context).tooltipSearchInThread,
             icon: Icon(
               Icons.search,
               color: Theme.of(context).colorScheme.onSurface,
@@ -120,6 +121,7 @@ class _InThreadSearchViewState extends State<_InThreadSearchView> {
             previous.isNewInSearchSelected != current.isNewInSearchSelected,
         builder: (BuildContext context, CommentsState state) {
           final AuthState authState = context.read<AuthBloc>().state;
+          final AppLocalizations l10n = AppLocalizations.of(context);
           return Scaffold(
             resizeToAvoidBottomInset: true,
             appBar: AppBar(
@@ -141,8 +143,10 @@ class _InThreadSearchViewState extends State<_InThreadSearchView> {
                         cursorColor: Theme.of(context).colorScheme.primary,
                         autocorrect: false,
                         decoration: InputDecoration(
-                          hintText: 'Search in this thread',
-                          suffixText: '${state.matchedComments.length} results',
+                          hintText: l10n.searchInThisThreadHint,
+                          suffixText: l10n.searchResultsCount(
+                            state.matchedComments.length,
+                          ),
                         ),
                         onChanged: (String text) => debouncer.run(
                           () => widget.commentsCubit.search(
@@ -173,7 +177,7 @@ class _InThreadSearchViewState extends State<_InThreadSearchView> {
                     const SizedBox(width: Dimens.pt12),
                     CustomChip(
                       selected: state.inThreadSearchAuthor == state.item.by,
-                      label: 'by OP',
+                      label: l10n.filterByOp,
                       onSelected: (bool value) {
                         if (value) {
                           widget.commentsCubit.search(
@@ -194,7 +198,7 @@ class _InThreadSearchViewState extends State<_InThreadSearchView> {
                       CustomChip(
                         selected:
                             state.inThreadSearchAuthor == authState.username,
-                        label: 'by me',
+                        label: l10n.filterByMe,
                         onSelected: (bool value) {
                           if (value) {
                             widget.commentsCubit.search(
@@ -215,7 +219,7 @@ class _InThreadSearchViewState extends State<_InThreadSearchView> {
                       const SizedBox(width: Dimens.pt12),
                       CustomChip(
                         selected: state.isNewInSearchSelected,
-                        label: 'new',
+                        label: l10n.filterNew,
                         onSelected: (bool value) {
                           if (value) {
                             widget.commentsCubit.search(
@@ -236,7 +240,7 @@ class _InThreadSearchViewState extends State<_InThreadSearchView> {
                     const SizedBox(width: Dimens.pt12),
                     CustomChip(
                       selected: false,
-                      label: 'clear',
+                      label: l10n.filterClear,
                       onSelected: (_) {
                         HapticFeedbackUtils.selection();
                         if (textEditingController.text.isNotEmpty) {

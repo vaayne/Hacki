@@ -5,6 +5,7 @@ import 'package:hacki/blocs/stories/stories_bloc.dart';
 import 'package:hacki/config/locator.dart';
 import 'package:hacki/config/router.dart';
 import 'package:hacki/cubits/search/search_cubit.dart';
+import 'package:hacki/l10n/app_localizations.dart';
 import 'package:hacki/models/item/item.dart';
 import 'package:hacki/screens/item/widgets/time_machine_dialog.dart';
 import 'package:hacki/screens/screens.dart';
@@ -90,23 +91,26 @@ abstract final class DialogProxy {
     if (context == null) return;
     showDialog<bool>(
       context: context,
-      builder: (BuildContext context) => AlertDialog(
-        title: const Text('Abort downloading?'),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => context.pop(),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => context.pop(false),
-            child: const Text('No'),
-          ),
-          TextButton(
-            onPressed: () => context.pop(true),
-            child: const Text('Yes'),
-          ),
-        ],
-      ),
+      builder: (BuildContext context) {
+        final AppLocalizations l10n = AppLocalizations.of(context);
+        return AlertDialog(
+          title: Text(l10n.dialogAbortDownloading),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => context.pop(),
+              child: Text(l10n.dialogCancel),
+            ),
+            TextButton(
+              onPressed: () => context.pop(false),
+              child: Text(l10n.dialogNo),
+            ),
+            TextButton(
+              onPressed: () => context.pop(true),
+              child: Text(l10n.dialogYes),
+            ),
+          ],
+        );
+      },
     ).then((bool? abortDownloading) {
       if (abortDownloading ?? false) {
         WakelockPlus.enable();
@@ -125,18 +129,21 @@ abstract final class DialogProxy {
     showDialog<bool>(
       context: context,
       barrierDismissible: false,
-      builder: (BuildContext context) => AlertDialog(
-        title: const Text('Download completed'),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              context.pop();
-              locator.get<AppReviewService>().requestReview();
-            },
-            child: const Text('Noooice!'),
-          ),
-        ],
-      ),
+      builder: (BuildContext context) {
+        final AppLocalizations l10n = AppLocalizations.of(context);
+        return AlertDialog(
+          title: Text(l10n.dialogDownloadCompleted),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                context.pop();
+                locator.get<AppReviewService>().requestReview();
+              },
+              child: Text(l10n.dialogNoooice),
+            ),
+          ],
+        );
+      },
     );
   }
 }

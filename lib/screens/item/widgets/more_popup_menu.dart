@@ -7,6 +7,7 @@ import 'package:hacki/config/constants.dart';
 import 'package:hacki/config/locator.dart';
 import 'package:hacki/cubits/cubits.dart';
 import 'package:hacki/extensions/extensions.dart';
+import 'package:hacki/l10n/app_localizations.dart';
 import 'package:hacki/models/models.dart';
 import 'package:hacki/screens/item/models/models.dart';
 import 'package:hacki/screens/screens.dart';
@@ -39,31 +40,33 @@ class MorePopupMenu extends StatelessWidget {
           return previous.status != current.status;
         },
         listener: (BuildContext context, VoteState voteState) {
+          final AppLocalizations l10n = AppLocalizations.of(context);
           if (voteState.status == VoteStatus.submitted) {
-            context.showSnackBar(content: SnackBarMessages.voteSubmitted);
+            context.showSnackBar(content: l10n.snackVoteSubmitted);
           } else if (voteState.status == VoteStatus.canceled) {
-            context.showSnackBar(content: SnackBarMessages.voteCanceled);
+            context.showSnackBar(content: l10n.snackVoteCanceled);
           } else if (voteState.status == VoteStatus.failure) {
             context.showErrorSnackBar();
           } else if (voteState.status ==
               VoteStatus.failureKarmaBelowThreshold) {
-            context.showSnackBar(content: SnackBarMessages.karmalyBroke);
+            context.showSnackBar(content: l10n.snackKarmalyBroke);
           } else if (voteState.status == VoteStatus.failureNotLoggedIn) {
             context.showSnackBar(
-              content: SnackBarMessages.notLoggedInNoVoting,
+              content: l10n.snackNotLoggedInNoVoting,
               persist: false,
               action: onLoginTapped,
-              label: 'Log in',
+              label: l10n.itemLogIn,
             );
           } else if (voteState.status == VoteStatus.failureBeHumble) {
             context.showSnackBar(
-              content: SnackBarMessages.noVotingOnYourOwnComment,
+              content: l10n.snackNoVotingOwnPost,
             );
           }
 
           context.pop(MenuAction.upvote);
         },
         builder: (BuildContext context, VoteState voteState) {
+          final AppLocalizations l10n = AppLocalizations.of(context);
           final bool upvoted = voteState.vote == Vote.up;
           final bool downvoted = voteState.vote == Vote.down;
           return Column(
@@ -105,17 +108,21 @@ class MorePopupMenu extends StatelessWidget {
                           showDialog<void>(
                             context: context,
                             builder: (BuildContext context) => AlertDialog(
-                              semanticLabel:
-                                  '''About ${state.user.id}. ${state.user.about}''',
-                              title: Text('About ${state.user.id}'),
+                              semanticLabel: l10n.itemAboutUserSemantics(
+                                state.user.id,
+                                state.user.about,
+                              ),
+                              title: Text(l10n.itemAboutUser(state.user.id)),
                               content: state.user.about.isEmpty
-                                  ? const Row(
+                                  ? Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: <Widget>[
                                         Text(
-                                          'empty',
-                                          style: TextStyle(color: Palette.grey),
+                                          l10n.itemEmpty,
+                                          style: const TextStyle(
+                                            color: Palette.grey,
+                                          ),
                                         ),
                                       ],
                                     )
@@ -143,7 +150,7 @@ class MorePopupMenu extends StatelessWidget {
                                     context.pop();
                                     onSearchUserTapped(context);
                                   },
-                                  child: const Text('Search'),
+                                  child: Text(l10n.itemSearch),
                                 ),
                                 TextButton(
                                   onPressed: () {
@@ -152,7 +159,7 @@ class MorePopupMenu extends StatelessWidget {
                                         .requestReview();
                                     context.pop();
                                   },
-                                  child: const Text('Okay'),
+                                  child: Text(l10n.itemOkay),
                                 ),
                               ],
                             ),
@@ -165,7 +172,7 @@ class MorePopupMenu extends StatelessWidget {
               ),
               ListTile(
                 leading: const Icon(Icons.search),
-                title: const Text('Search on HN'),
+                title: Text(l10n.itemSearchOnHn),
                 onTap: () {
                   context.pop();
                   onSearchUserTapped(context);
@@ -174,7 +181,7 @@ class MorePopupMenu extends StatelessWidget {
               if (onSearchInThreadTapped != null)
                 ListTile(
                   leading: const Icon(Icons.manage_search),
-                  title: const Text('Search in thread'),
+                  title: Text(l10n.itemSearchInThread),
                   onTap: onSearchInThreadTapped,
                 ),
               ListTile(
@@ -185,7 +192,7 @@ class MorePopupMenu extends StatelessWidget {
                   color: upvoted ? Theme.of(context).colorScheme.primary : null,
                 ),
                 title: Text(
-                  upvoted ? 'Upvoted' : 'Upvote',
+                  upvoted ? l10n.itemUpvoted : l10n.itemUpvote,
                   style: upvoted
                       ? TextStyle(color: Theme.of(context).colorScheme.primary)
                       : null,
@@ -203,7 +210,7 @@ class MorePopupMenu extends StatelessWidget {
                       : null,
                 ),
                 title: Text(
-                  downvoted ? 'Downvoted' : 'Downvote',
+                  downvoted ? l10n.itemDownvoted : l10n.itemDownvote,
                   style: downvoted
                       ? TextStyle(color: Theme.of(context).colorScheme.primary)
                       : null,
@@ -220,31 +227,33 @@ class MorePopupMenu extends StatelessWidget {
                           ? Theme.of(context).colorScheme.primary
                           : null,
                     ),
-                    title: Text(isFav ? 'Unfavorite' : 'Favorite'),
+                    title: Text(
+                      isFav ? l10n.itemUnfavorite : l10n.itemFavorite,
+                    ),
                     onTap: () => context.pop(MenuAction.fav),
                   );
                 },
               ),
               ListTile(
                 leading: const Icon(FeatherIcons.share),
-                title: const Text('Share'),
+                title: Text(l10n.itemShare),
                 onTap: () => context.pop(MenuAction.share),
               ),
               ListTile(
                 leading: const Icon(Icons.local_police),
-                title: const Text('Flag'),
+                title: Text(l10n.itemFlag),
                 onTap: () => context.pop(MenuAction.flag),
               ),
               ListTile(
                 leading: Icon(
                   isBlocked ? Icons.visibility : Icons.visibility_off,
                 ),
-                title: Text(isBlocked ? 'Unblock' : 'Block'),
+                title: Text(isBlocked ? l10n.itemUnblock : l10n.itemBlock),
                 onTap: () => context.pop(MenuAction.block),
               ),
               ListTile(
                 leading: const Icon(Icons.open_in_browser),
-                title: const Text('View in Browser'),
+                title: Text(l10n.itemViewInBrowser),
                 onTap: () {
                   context.pop();
                   final String url =
@@ -258,7 +267,7 @@ class MorePopupMenu extends StatelessWidget {
               ),
               ListTile(
                 leading: const Icon(Icons.close),
-                title: const Text('Cancel'),
+                title: Text(l10n.itemCancel),
                 onTap: () => context.pop(MenuAction.cancel),
               ),
             ],

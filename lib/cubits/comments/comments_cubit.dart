@@ -13,6 +13,7 @@ import 'package:hacki/config/paths.dart';
 import 'package:hacki/config/router.dart';
 import 'package:hacki/cubits/cubits.dart';
 import 'package:hacki/extensions/extensions.dart';
+import 'package:hacki/l10n/app_localizations.dart';
 import 'package:hacki/models/models.dart';
 import 'package:hacki/repositories/repositories.dart';
 import 'package:hacki/screens/item/widgets/in_thread_search_icon_button.dart'
@@ -103,7 +104,7 @@ class CommentsCubit extends Cubit<CommentsState> with Loggable, BuildableMixin {
   final Map<int, StreamSubscription<Comment>> _streamSubscriptions =
       <int, StreamSubscription<Comment>>{};
 
-  final String currentTips = Constants.tips;
+  final int currentTipIndex = Constants.randomTipIndex;
 
   static const int _webFetchingCmtCountLowerLimit = 5;
   static DateTime? _hackerNewsWebRetryAfterDateTime;
@@ -1127,12 +1128,12 @@ comments length is ${state.comments.length}
             _preferenceCubit.state.isWebViewBottomSheetEnabled;
         final BuildContext? rootContext = navigatorKey.currentContext;
         if (rootContext == null) return;
+        final AppLocalizations l10n = AppLocalizations.of(rootContext);
         rootContext.showSnackBar(
           persist: false,
           duration: AppDurations.fiveSeconds,
-          content:
-              '''$newCommentsCount new comment${newCommentsCount > 1 ? 's' : ''} fetched.''',
-          label: openInThreadSearch == null ? null : 'Search',
+          content: l10n.commentsFetched(newCommentsCount),
+          label: openInThreadSearch == null ? null : l10n.itemSearch,
           isFloating: isWebViewBottomSheetEnabled,
           bottomPadding: isWebViewBottomSheetEnabled
               ? MediaQuery.of(rootContext).size.height - Dimens.pt240

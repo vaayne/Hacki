@@ -11,12 +11,14 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hacki/blocs/blocs.dart';
 import 'package:hacki/config/constants.dart';
 import 'package:hacki/config/locator.dart';
 import 'package:hacki/config/paths.dart';
 import 'package:hacki/config/router.dart';
 import 'package:hacki/cubits/cubits.dart';
+import 'package:hacki/l10n/app_localizations.dart';
 import 'package:hacki/screens/widgets/widgets.dart';
 import 'package:hacki/services/fetcher.dart';
 import 'package:hacki/styles/styles.dart';
@@ -234,7 +236,8 @@ class HackiApp extends StatelessWidget {
             previous.isTrueDarkModeEnabled != current.isTrueDarkModeEnabled ||
             previous.isHackerNewsThemeEnabled !=
                 current.isHackerNewsThemeEnabled ||
-            previous.isDevModeEnabled != current.isDevModeEnabled,
+            previous.isDevModeEnabled != current.isDevModeEnabled ||
+            previous.locale != current.locale,
         builder: (BuildContext context, PreferenceState state) {
           return AdaptiveTheme(
             light: ThemeData(
@@ -304,6 +307,15 @@ class HackiApp extends StatelessWidget {
                           child: MaterialApp.router(
                             title: 'Hacki',
                             debugShowCheckedModeBanner: false,
+                            locale: state.locale,
+                            localizationsDelegates:
+                                const <LocalizationsDelegate<dynamic>>[
+                                  AppLocalizations.delegate,
+                                  GlobalMaterialLocalizations.delegate,
+                                  GlobalWidgetsLocalizations.delegate,
+                                  GlobalCupertinoLocalizations.delegate,
+                                ],
+                            supportedLocales: AppLocalizations.supportedLocales,
                             darkTheme: state.isHackerNewsThemeEnabled
                                 ? HackerNewsDarkTheme.theme
                                 : null,

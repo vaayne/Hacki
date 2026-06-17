@@ -122,6 +122,11 @@ class PreferenceState extends Equatable {
   double get textScaleFactor =>
       preferences.singleWhereType<TextScaleFactorPreference>().val;
 
+  /// Selected app locale, or null to follow the device locale.
+  Locale? get locale => AppLanguage.values
+      .elementAt(preferences.singleWhereType<LocalePreference>().val)
+      .locale;
+
   MaterialColor get appColor {
     return materialColors.elementAt(
           preferences.singleWhereType<AppColorPreference>().val,

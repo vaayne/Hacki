@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:hacki/config/constants.dart';
+import 'package:hacki/l10n/app_localizations.dart';
 import 'package:hacki/styles/styles.dart';
 
 class ShareScreenTips extends StatelessWidget {
@@ -23,12 +24,13 @@ class ShareScreenTips extends StatelessWidget {
         );
       },
       openBuilder: (BuildContext context, void Function() action) {
+        final AppLocalizations l10n = AppLocalizations.of(context);
         final double imageWidth = min(
           _maxFeatureHintsImageWidth,
           MediaQuery.of(context).size.width / 2 - Dimens.pt36,
         );
         return Scaffold(
-          appBar: AppBar(title: const Text('Tips')),
+          appBar: AppBar(title: Text(l10n.shareTipsTitle)),
           body: Padding(
             padding: const EdgeInsets.symmetric(horizontal: Dimens.pt12),
             child: Column(
@@ -79,7 +81,7 @@ class ShareScreenTips extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: Dimens.pt12),
                   child: Text(
-                    '''You can select text in the comment before tapping on Share button and the text will be highlighted in resulted screenshot.''',
+                    l10n.shareTipsContent,
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.onSecondaryContainer,
                       fontSize: TextDimens.pt16,
@@ -92,16 +94,16 @@ class ShareScreenTips extends StatelessWidget {
                     const Spacer(),
                     TextButton(
                       onPressed: action,
-                      child: const Text(
-                        'Dismiss',
-                        style: TextStyle(fontSize: TextDimens.pt16),
+                      child: Text(
+                        l10n.shareTipsDismiss,
+                        style: const TextStyle(fontSize: TextDimens.pt16),
                       ),
                     ),
                     TextButton(
                       onPressed: action,
-                      child: const Text(
-                        'Interesting',
-                        style: TextStyle(
+                      child: Text(
+                        l10n.shareTipsInteresting,
+                        style: const TextStyle(
                           fontSize: TextDimens.pt16,
                           fontWeight: FontWeight.bold,
                         ),
