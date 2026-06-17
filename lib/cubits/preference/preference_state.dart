@@ -103,6 +103,8 @@ class PreferenceState extends Equatable {
 
   bool get isDevModeEnabled => _isOn<DevMode>();
 
+  bool get isTranslationEnabled => _isOn<TranslationPreference>();
+
   bool get isHackerNewsThemeEnabled => _isOn<HackerNewsThemePreference>();
 
   bool get isPreviewImageLeftAligned =>

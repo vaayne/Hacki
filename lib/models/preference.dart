@@ -89,6 +89,8 @@ abstract final class Preference<T> extends Equatable with SettingsDisplayable {
         const HackerNewsThemePreference(),
         const HapticFeedbackPreference(),
         const TrueDarkModePreference(),
+        const DividerPlaceholder(label: 'Translation'),
+        const TranslationPreference(),
         const DevMode(),
       ]);
 
@@ -126,6 +128,27 @@ abstract final class IntPreference extends Preference<int> {
 
 abstract final class DoublePreference extends Preference<double> {
   const DoublePreference({required super.val});
+}
+
+/// Whether to show an inline "Translate" affordance on comments and stories.
+final class TranslationPreference extends BooleanPreference {
+  const TranslationPreference({bool? val}) : super(val: val ?? _defaultValue);
+
+  static const bool _defaultValue = false;
+
+  @override
+  TranslationPreference copyWith({required bool? val}) {
+    return TranslationPreference(val: val);
+  }
+
+  @override
+  String get key => 'translationEnabled';
+
+  @override
+  String get title => 'Translation';
+
+  @override
+  String get subtitle => 'show inline translation for comments and stories.';
 }
 
 final class DevMode extends BooleanPreference {

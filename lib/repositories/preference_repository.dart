@@ -25,6 +25,12 @@ class PreferenceRepository with Loggable {
   static const String _lastReadStoryIdKey = 'lastReadStoryId';
   static const String _downloadTimestampKey = 'downloadTimestamp';
   static const String _tourKey = 'tour';
+  static const String _translationApiKeyKey = 'translationApiKey';
+  static const String _translationBaseUrlKey = 'translationBaseUrl';
+  static const String _translationModelKey = 'translationModel';
+
+  static const String defaultTranslationBaseUrl = 'https://api.openai.com/v1';
+  static const String defaultTranslationModel = 'gpt-4o-mini';
 
   final SyncedSharedPreferences _syncedPrefs;
   final Future<SharedPreferences> _prefs;
@@ -381,6 +387,41 @@ class PreferenceRepository with Loggable {
   }
 
   static String _getPushNotificationKey(int commentId) => 'pushed_$commentId';
+
+  //#region translation
+
+  Future<String?> get translationApiKey async =>
+      _secureStorage.read(key: _translationApiKeyKey);
+
+  Future<void> setTranslationApiKey(String apiKey) async {
+    await _secureStorage.write(
+      key: _translationApiKeyKey,
+      value: apiKey,
+      aOptions: AndroidOptions.defaultOptions,
+    );
+  }
+
+  Future<String> get translationBaseUrl async => _prefs.then(
+    (SharedPreferences prefs) =>
+        prefs.getString(_translationBaseUrlKey) ?? defaultTranslationBaseUrl,
+  );
+
+  Future<void> setTranslationBaseUrl(String url) async {
+    final SharedPreferences prefs = await _prefs;
+    await prefs.setString(_translationBaseUrlKey, url);
+  }
+
+  Future<String> get translationModel async => _prefs.then(
+    (SharedPreferences prefs) =>
+        prefs.getString(_translationModelKey) ?? defaultTranslationModel,
+  );
+
+  Future<void> setTranslationModel(String model) async {
+    final SharedPreferences prefs = await _prefs;
+    await prefs.setString(_translationModelKey, model);
+  }
+
+  //#endregion
 
   @override
   String get logIdentifier => 'PreferenceRepository';

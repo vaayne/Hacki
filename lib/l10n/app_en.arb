@@ -577,5 +577,17 @@
   "featureJumpDownDesc": "Tapping on this button will take you to the next root level comment.\n\nLong press on it to jump to the end of this thread.",
   "featureSearchInThreadTitle": "Search in Thread",
   "featureSearchInThreadDesc": "Search for comments in this thread.",
-  "notificationNewReply": "You have a new reply!"
+  "notificationNewReply": "You have a new reply!",
+  "prefTranslationTitle": "Translation",
+  "prefTranslationSubtitle": "show inline translation for comments and stories.",
+  "prefDividerTranslation": "Translation",
+  "settingsTranslationApiKey": "API Key",
+  "settingsTranslationApiKeyHint": "sk-...",
+  "settingsTranslationBaseUrl": "Base URL",
+  "settingsTranslationModel": "Model",
+  "translationTranslate": "Translate",
+  "translationTranslating": "Translating…",
+  "translationShowOriginal": "Hide translation",
+  "translationRetry": "Translation failed. Tap to retry.",
+  "translationApiKeyMissing": "Set your translation API key in Settings."
 }
