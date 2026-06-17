@@ -32,6 +32,7 @@ Future<void> setUpLocator() async {
     ..registerSingleton<HistoryRepository>(HistoryRepository())
     ..registerSingleton<PreferenceRepository>(PreferenceRepository())
     ..registerSingleton<SearchRepository>(SearchRepository())
+    ..registerSingleton<TranslationRepository>(TranslationRepository())
     ..registerSingleton<AuthRepository>(AuthRepository())
     ..registerSingleton<PostRepository>(PostRepository())
     ..registerSingleton<OfflineRepository>(OfflineRepository())
