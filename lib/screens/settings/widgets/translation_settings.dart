@@ -20,6 +20,7 @@ class _TranslationSettingsState extends State<TranslationSettings> {
   final TextEditingController _apiKeyController = TextEditingController();
   final TextEditingController _baseUrlController = TextEditingController();
   final TextEditingController _modelController = TextEditingController();
+  final TextEditingController _batchSizeController = TextEditingController();
   bool _obscureApiKey = true;
 
   @override
@@ -32,11 +33,13 @@ class _TranslationSettingsState extends State<TranslationSettings> {
     final String? apiKey = await _repository.translationApiKey;
     final String baseUrl = await _repository.translationBaseUrl;
     final String model = await _repository.translationModel;
+    final int batchSize = await _repository.translationBatchSize;
     if (!mounted) return;
     setState(() {
       _apiKeyController.text = apiKey ?? '';
       _baseUrlController.text = baseUrl;
       _modelController.text = model;
+      _batchSizeController.text = batchSize.toString();
     });
   }
 
@@ -45,6 +48,7 @@ class _TranslationSettingsState extends State<TranslationSettings> {
     _apiKeyController.dispose();
     _baseUrlController.dispose();
     _modelController.dispose();
+    _batchSizeController.dispose();
     super.dispose();
   }
 
@@ -98,6 +102,20 @@ class _TranslationSettingsState extends State<TranslationSettings> {
               labelText: l10n.settingsTranslationModel,
             ),
             onChanged: _repository.setTranslationModel,
+          ),
+          SizedBoxes.pt8,
+          TextField(
+            controller: _batchSizeController,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              labelText: l10n.settingsTranslationBatchSize,
+            ),
+            onChanged: (String value) {
+              final int? size = int.tryParse(value);
+              if (size != null && size > 0) {
+                _repository.setTranslationBatchSize(size.clamp(1, 50));
+              }
+            },
           ),
         ],
       ),

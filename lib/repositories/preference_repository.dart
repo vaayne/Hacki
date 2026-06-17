@@ -28,9 +28,11 @@ class PreferenceRepository with Loggable {
   static const String _translationApiKeyKey = 'translationApiKey';
   static const String _translationBaseUrlKey = 'translationBaseUrl';
   static const String _translationModelKey = 'translationModel';
+  static const String _translationBatchSizeKey = 'translationBatchSize';
 
   static const String defaultTranslationBaseUrl = 'https://api.openai.com/v1';
   static const String defaultTranslationModel = 'gpt-4o-mini';
+  static const int defaultTranslationBatchSize = 10;
 
   final SyncedSharedPreferences _syncedPrefs;
   final Future<SharedPreferences> _prefs;
@@ -419,6 +421,16 @@ class PreferenceRepository with Loggable {
   Future<void> setTranslationModel(String model) async {
     final SharedPreferences prefs = await _prefs;
     await prefs.setString(_translationModelKey, model);
+  }
+
+  Future<int> get translationBatchSize async => _prefs.then(
+    (SharedPreferences prefs) =>
+        prefs.getInt(_translationBatchSizeKey) ?? defaultTranslationBatchSize,
+  );
+
+  Future<void> setTranslationBatchSize(int size) async {
+    final SharedPreferences prefs = await _prefs;
+    await prefs.setInt(_translationBatchSizeKey, size);
   }
 
   //#endregion

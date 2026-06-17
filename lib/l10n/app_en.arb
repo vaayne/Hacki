@@ -585,6 +585,7 @@
   "settingsTranslationApiKeyHint": "sk-...",
   "settingsTranslationBaseUrl": "Base URL",
   "settingsTranslationModel": "Model",
+  "settingsTranslationBatchSize": "Batch Size",
   "translationTranslating": "Translating…",
   "translationRetry": "Translation failed. Tap to retry.",
   "translationApiKeyMissing": "Set your translation API key in Settings."
