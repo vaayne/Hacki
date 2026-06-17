@@ -409,6 +409,9 @@ class _SettingsViewState extends State<SettingsView>
                         : null,
                     activeThumbColor: Theme.of(context).colorScheme.primary,
                   ),
+                if (preference is TranslationPreference &&
+                    preferenceState.isTranslationEnabled)
+                  const TranslationSettings(),
                 if (preference is MarkReadStoriesModePreference) ...<Widget>[
                   Padding(
                     padding: const EdgeInsets.symmetric(
